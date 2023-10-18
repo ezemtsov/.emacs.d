@@ -1,59 +1,37 @@
-;; ;; Use tree-sitter modes for various languages.
-;; (setq major-mode-remap-alist
-;;       '((bash-mode . bash-ts-mode)
-;;         (c++-mode . c++-ts-mode)
-;;         (c-mode . c-ts-mode)
-;;         (c-or-c++-mode . c-or-c++-ts-mode)
-;;         (csharp-mode . csharp-ts-mode)
-;;         (json-mode . json-ts-mode)
-;;         (python-mode . python-ts-mode)
-;;         (rust-mode . rust-ts-mode)
-;;         (toml-mode . toml-ts-mode)
-;;         (yaml-mode . yaml-ts-mode)
-;;         (go-mode . go-ts-mode)
-;;         (cmake-mode . cmake-ts-mode)))
+(use-package emacs
+  :config
+  (add-hook 'before-save-hook 'whitespace-cleanup)
+  (add-hook 'prog-mode-hook 'hl-line-mode)
+  (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+  (add-hook 'prog-mode-hook 'show-paren-mode)
+  (add-hook 'prog-mode-hook 'rainbow-mode)
+  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
-;; ;; Add 'modes' folder that contains other settings to load.
-;; (add-hook 'before-save-hook
-;;           (lambda ()
-;;             (whitespace-cleanup)))
+  :custom
+  ;; Use tree-sitter modes for various languages.
+  (major-mode-remap-alist
+   '((bash-mode . bash-ts-mode)
+     (csharp-mode . csharp-ts-mode)
+     (json-mode . json-ts-mode)
+     (python-mode . python-ts-mode)
+     (rust-mode . rust-ts-mode)
+     (toml-mode . toml-ts-mode)
+     (yaml-mode . yaml-ts-mode))))
 
-;; (add-hook 'prog-mode-hook
-;;           (lambda ()
-;;             (hl-line-mode)
-;;             (flyspell-prog-mode)
-;;             (display-line-numbers-mode)
-;;             (show-paren-mode)
-;;             (rainbow-mode)
-;;             (rainbow-delimiters-mode)))
+(use-package nix-mode
+  :ensure t
+  :defer t
+  :custom
+  (nix-nixfmt-bin "nixpkgs-fmt"))
 
-;; (use-package nix-mode
+(use-package web-mode
+  :ensure t
+  :defer t)
+
+;; (use-package dump-mode
 ;;   :config
-;;   (setq nix-nixfmt-bin "nixpkgs-fmt"))
-
-;; (use-package web-mode
-;;   :defer t
-;;   :config
-;;   (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-;;   (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-;;   (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
-;;   (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
-;;   (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-;;   (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
-;;   (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
-;;   (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
-;;   (add-to-list 'auto-mode-alist '("\\.liquid\\'" . web-mode)))
-
-;; (use-package text-mode
-;;   :hook
-;;   (flyspell-mode))
-
-;; ;; (use-package dump-mode
-;; ;;   :config
-;; ;;   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
-
-
-;; ;; (add-to-list 'auto-mode-alist '("\\.tf\\'" . hcl-mode))
+;;   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
 (use-package fsharp-mode
   :defer t
@@ -72,7 +50,17 @@
   :config
   (highlight-indent-guides-mode)
   (setenv "PYTHONENCODING" "utf-8")
+  (setq python-indent-offset 4)
   :hook
   (python-mode . eglot-ensure))
+
+;; Add support for pushing to gerrit
+(use-package magit
+  :config
+  (defun magit-push-to-gerrit ()
+    (interactive)
+    (magit-git-command "push origin HEAD:refs/for/master" (magit-toplevel)))
+  (transient-append-suffix 'magit-push "p"
+    '("R" "Push to gerrit" magit-push-to-gerrit)))
 
 (provide 'layers)

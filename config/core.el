@@ -6,7 +6,6 @@
   (blink-cursor-mode 0) ;; stop blinking
   (windmove-default-keybindings) ;; move with arrows
   (delete-selection-mode t) ;; delete on paste
-  (global-display-line-numbers-mode t) ;; always show line numers
   (electric-pair-mode t) ;; smart parentesis wrapping
   (setq project-vc-extra-root-markers '(".gitignore")) ;; define a project
   (defadvice split-window ;; swtich forcus to the new window
@@ -15,8 +14,11 @@
   (menu-bar-mode 0) ;; remove menus
   (scroll-bar-mode 0) ;; remove scrollbar
   (tool-bar-mode 0) ;; remove toolbars
-  (envrc-global-mode) ;; support direnv
-  
+  (which-key-mode t) ;; show options
+
+  (setq indent-tabs-mode nil) ;; disable tabs
+  (setq tab-width 4) ;; 4 spaces always
+
   :custom
   (use-short-answers t)	;; y or n
   (inhibit-startup-message t) ;; disable startup screen
@@ -24,10 +26,8 @@
   (dired-listing-switches "-alFh") ;; show human-readable dired
   (auto-save-file-name-transforms '((".*" "/tmp/" t))) ;; keep trash away from source
   (backup-directory-alist '((".*" . "/tmp/"))) ;; keep trash away from source
-
-  :hook
-  (prog-mode . whitespace-cleanup)
-  (prog-mode . hl-line-mode)
+  (magit-display-buffer-function ;; show magit in the same buffer
+   'magit-display-buffer-fullcolumn-most-v1)
 
   :bind
   ("M-TAB" . completion-at-point)
@@ -42,13 +42,17 @@
   :init
   (savehist-mode))
 
+(use-package project
+  :bind-keymap
+  ("C-c p" . project-prefix-map))
+
 (use-package consult
   :bind
   (("C-c M-x" . consult-mode-command)
    ("C-x b" . consult-buffer)
    ("C-s" . consult-line)
-   ("C-x s" . consult-project-regexp)
-   ("C-x p SPC" . consult-project-buffer)))
+   ("C-x p g" . consult-ripgrep)
+   ("C-x p f" . consult-find)))
 
 (use-package orderless
   :custom
