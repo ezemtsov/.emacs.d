@@ -58,7 +58,7 @@
   :config
   (defun magit-push-to-gerrit ()
     (interactive)
-    (magit-git-command "push origin HEAD:refs/for/master" (magit-toplevel)))
+    (magit-git-command-topdir "git push origin HEAD:refs/for/master"))
   (transient-append-suffix 'magit-push "p"
     '("R" "Push to gerrit" magit-push-to-gerrit)))
 
