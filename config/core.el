@@ -17,7 +17,6 @@
   (scroll-bar-mode 0) ;; remove scrollbar
   (tool-bar-mode 0) ;; remove toolbars
   (which-key-mode t) ;; show options
-
   (setq indent-tabs-mode nil) ;; disable tabs
   (setq tab-width 4) ;; 4 spaces always
 
@@ -32,6 +31,8 @@
    'magit-display-buffer-fullcolumn-most-v1)
 
   :bind
+  ("C-=" . text-scale-increase)
+  ("C--" . text-scale-decrease)
   ("M-TAB" . completion-at-point)
   ("M-/" . completion-at-point)
   ("C-c a" . align-regexp))
