@@ -8,6 +8,9 @@
   (add-hook 'prog-mode-hook 'rainbow-mode)
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
+  ;; enable jump to definition even when lsp is not enabled
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+
   :custom
   ;; Use tree-sitter modes for various languages.
   (major-mode-remap-alist
@@ -28,10 +31,6 @@
 (use-package web-mode
   :ensure t
   :defer t)
-
-;; (use-package dump-mode
-;;   :config
-;;   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
 (use-package fsharp-mode
   :defer t
