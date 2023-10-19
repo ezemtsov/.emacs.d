@@ -81,6 +81,11 @@
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file))
 
+;; Use fish for vterm
+(use-package vterm
+  :custom
+  (vterm-shell "fish"))
+
 ;; (use-package lsp-bridge
 ;;   :config
 ;;   (global-lsp-bridge-mode))
