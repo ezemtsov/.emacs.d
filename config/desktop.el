@@ -17,54 +17,22 @@
 ;;   (interactive)
 ;;   (shell-command "systemctl suspend"))
 
-(defun exwm-layout--hide (id)
-  "Hide window ID."
-  (with-current-buffer (exwm--id->buffer id)
-    (unless (or (exwm-layout--iconic-state-p)
-                (and exwm--floating-frame
-                     (eq 4294967295. exwm--desktop)))
-      (exwm--log "Hide #x%x" id)
-      (when exwm--floating-frame
-        (let* ((container (frame-parameter exwm--floating-frame
-                                           'exwm-container))
-               (geometry (xcb:+request-unchecked+reply exwm--connection
-                             (make-instance 'xcb:GetGeometry
-                                            :drawable container))))
-          (setq exwm--floating-frame-position
-                (vector (slot-value geometry 'x) (slot-value geometry 'y)))
-          (exwm--set-geometry container exwm-layout--floating-hidden-position
-                              exwm-layout--floating-hidden-position
-                              1
-                              1)))
-      (xcb:+request exwm--connection
-          (make-instance 'xcb:ChangeWindowAttributes
-                         :window id :value-mask xcb:CW:EventMask
-                         :event-mask xcb:EventMask:NoEvent))
-      (xcb:+request exwm--connection
-          (make-instance 'xcb:UnmapWindow :window id))
-      (xcb:+request exwm--connection
-          (make-instance 'xcb:ChangeWindowAttributes
-                         :window id :value-mask xcb:CW:EventMask
-                         :event-mask (exwm--get-client-event-mask)))
-      (exwm-layout--set-state id xcb:icccm:WM_STATE:IconicState)
-      ;; Cumment that fix Chrome being unfocused
-      ;; (cl-pushnew xcb:Atom:_NET_WM_STATE_HIDDEN exwm--ewmh-state)
-      (exwm-layout--set-ewmh-state id)
-      (exwm-layout--auto-iconify)
-      (xcb:flush exwm--connection))))
-
 (defun screen-lock ()
   (interactive)
-  (shell-command "i3lock -t -i /etc/nixos/resources/desktop.png"))
+  (start-process "xsecurelock" nil "xsecurelock"))
+
+(defun start-alacritty ()
+  (interactive)
+  (start-process "alacritty" nil "alacritty"))
 
 (defun monitor-external-disable ()
   (interactive)
-  (shell-command "xrandr --output eDP-1 --primary --auto --output DP-1-1-8 --off")
+  (shell-command "xrandr --output eDP-1 --primary --auto --output DP-1-1-2 --off")
   (message "Disable external monitor"))
 
 (defun monitor-external-enable ()
   (interactive)
-  (shell-command "xrandr --output eDP-1 --off --output DP-1-1-8 --auto --primary")
+  (shell-command "xrandr --output eDP-1 --off --output DP-1-1-2 --auto --primary")
   (message "Enable external monitor"))
 
 ;; (defun pulseaudio-ctl (cmd)
@@ -121,6 +89,7 @@
 
 ;; Set 10 workspaces
 (setq exwm-workspace-number 10)
+
 ;; 's-N': Switch to certain workspace, but switch back to the previous
 ;; one when tapping twice (emulates i3's `back_and_forth' feature)
 (defvar *exwm-workspace-from-to* '(-1 . -1))
@@ -156,19 +125,16 @@
   (exwm-workspace-rename-buffer exwm-class-name))
 (add-hook 'exwm-update-class-hook 'exwm-rename-buffer)
 
-;; ;; Show tiny fringes
-;; (fringe-mode 5)
+;; Hide fringes
+(fringe-mode 0)
 
 ;; Show system tray
 (exwm-systemtray-enable)
 
-;; ;; Keyboard layout per window
+;; Keyboard layout per window
 ;; (exwm-xim-enable)
 
 (add-hook 'exwm-floating-setup-hook #'exwm-layout-show-mode-line)
-;; (add-hook 'exwm-floating-exit-hook 'exwm-layout-show-mode-line)
-
-;; (add-hook 'exwm-init-hook 'monitor-external-enable)
 
 (display-battery-mode)
 (setq display-time-format "%a %H:%M")
@@ -176,9 +142,10 @@
 
 (defcustom exwm-workspace-mode-line-format
   `("["
-    (:propertize (:eval (format "WS-%d" exwm-workspace-current-index))
-                 face bold
-                 mouse-face mode-line-highlight)
+    (:propertize
+     (:eval (format "WS-%d" exwm-workspace-current-index))
+     face bold
+     mouse-face mode-line-highlight)
     "]")
   "EXWM workspace in the mode line."
   :type 'sexp)
@@ -191,38 +158,26 @@
       (window-configuration-to-register '_)
       (delete-other-windows))))
 
-(add-to-list 'mode-line-misc-info exwm-workspace-mode-line-format t)
-;; ;;-----------------------------------------------------------
-;; ;; EXWM Bindings
-;; ;;-----------------------------------------------------------
-
-;; (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
-
-;; ;; Emacs emulation for xwindows
-;; (setq exwm-input-simulation-keys
-;;       '((,(kbd "C-b") . [left])
-;;         (,(kbd "C-f") . [right])
-;;         (,(kbd "C-p") . [up])
-;;         (,(kbd "C-n") . [down])
-;;         (,(kbd "C-a") . [home])
-;;         (,(kbd "C-e") . [end])
-;;         (,(kbd "C-d") . [delete])
-;;         (,(kbd "C-y") . ?\C-v)
-;;         (,(kbd "M-w") . ?\C-c)))
+(use-package emacs
+  :config
+  (add-to-list 'mode-line-misc-info exwm-workspace-mode-line-format t))
 
 ;; Global EXWM keybindings
 (setq exwm-input-global-keys
         ;; Utilities
       `((,(kbd "s-r")                     . exwm-reset)
         (,(kbd "s-w")                     . exwm-workspace-switch)
-        (,(kbd "s-f")                     . toggle-maximize-buffer)
-        (,(kbd "s-d")                     . counsel-linux-app)
-        (,(kbd "s-L")                     . screen-lock)
         (,(kbd "<print>")                 . screenshot)
-        (,(kbd "s-<return>")              . vterm-toggle)
         (,(kbd "s-i")                     . exwm-input-toggle-keyboard)
         (,(kbd "s-j")                     . exwm-jump-to-buffer)
-        
+
+	(,(kbd "s-d")                     . counsel-linux-app)
+	(,(kbd "s-e")                     . rotate:even-horizontal)
+	(,(kbd "s-v")                     . rotate:even-vertical)
+	(,(kbd "s-<return>")              . start-alacritty)
+	(,(kbd "s-L")                     . secure-lock)
+	(,(kbd "s-f")                     . toggle-maximize-buffer)
+		
         ;; External monitor
         (,(kbd "s-m <up>")                . monitor-external-enable)
         (,(kbd "s-m <down>")              . monitor-external-disable)
@@ -272,15 +227,9 @@
 
 ;; Enable EXWM
 (exwm-enable)
-
-;; Randr config
-(setq exwm-randr-workspace-monitor-plist
-  '(0 "eDP-1" 1 "DP-1-1-8"))
 (exwm-randr-enable)
-
+ 
 ;; First workspace is the default one
 (exwm-workspace-switch-create 1)
-
-(exwm-randr-refresh)
 
 (provide 'desktop)

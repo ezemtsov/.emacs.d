@@ -28,10 +28,9 @@
 ;; Import configuration packages
 (defun initialize-settings ()
   (interactive)
-  (mapc 'require '(;; desktop
-                   core
-                   layers
-                   )))
+  (mapc 'require '(desktop
+		   core
+                   layers)))
 
 (add-hook 'after-init-hook 'initialize-settings)
 

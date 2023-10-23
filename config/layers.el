@@ -1,6 +1,6 @@
 (use-package emacs
   :config
-  (add-hook 'before-save-hook 'whitespace-cleanup)
+  ;; (add-hook 'before-save-hook 'whitespace-cleanup) ;; breaks jinja mode for some reason
   (add-hook 'prog-mode-hook 'hl-line-mode)
   (add-hook 'prog-mode-hook 'flyspell-prog-mode)
   (add-hook 'prog-mode-hook 'display-line-numbers-mode)
@@ -22,6 +22,10 @@
      (toml-mode . toml-ts-mode)
      (yaml-mode . yaml-ts-mode))))
 
+(use-package eglot
+  :custom
+  (eglot-autoshutdown t)) ;; shutdown eglot servers after buffer is closed
+
 (use-package nix-mode
   :ensure t
   :defer t
@@ -38,6 +42,7 @@
   :init
   (require 'eglot-fsharp)
   :config
+  ;; (highlight-indent-guides-mode t)
   (add-to-list 'auto-mode-alist '("\\.fsproj\\'" . nxml-mode))
   (add-to-list 'auto-mode-alist '("\\.csproj\\'" . nxml-mode))
   :hook
@@ -47,10 +52,11 @@
   :defer t
   :ensure t
   :config
-  (highlight-indent-guides-mode)
+  ;; (highlight-indent-guides-mode)
   (setenv "PYTHONENCODING" "utf-8")
   (setq python-indent-offset 4)
   :hook
+  (python-ts-mode . eglot-ensure)
   (python-mode . eglot-ensure))
 
 ;; Add support for pushing to gerrit
@@ -58,7 +64,7 @@
   :config
   (defun magit-push-to-gerrit ()
     (interactive)
-    (magit-git-command-topdir "git push origin HEAD:refs/for/master"))
+    (magit-git-command-topdir ("git push origin HEAD:refs/for/master")))
   (transient-append-suffix 'magit-push "p"
     '("R" "Push to gerrit" magit-push-to-gerrit)))
 

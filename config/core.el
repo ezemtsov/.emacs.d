@@ -9,7 +9,6 @@
   (windmove-default-keybindings) ;; move with arrows
   (delete-selection-mode t) ;; delete on paste
   (electric-pair-mode t) ;; smart parentesis wrapping
-  (setq project-vc-extra-root-markers '(".gitignore")) ;; define a project
   (defadvice split-window ;; swtich forcus to the new window
       (after split-window-after activate)
     (other-window 1))
@@ -20,6 +19,10 @@
   (setq indent-tabs-mode nil) ;; disable tabs
   (setq tab-width 4) ;; 4 spaces always
 
+  ;; a folder with .gitignore is a project
+  ;; this is important for eglot to correctly define workspaces
+  (setq project-vc-extra-root-markers '(".gitignore")) 
+  
   :custom
   (use-short-answers t)	;; y or n
   (inhibit-startup-message t) ;; disable startup screen
@@ -35,7 +38,8 @@
   ("C--" . text-scale-decrease)
   ("M-TAB" . completion-at-point)
   ("M-/" . completion-at-point)
-  ("C-c a" . align-regexp))
+  ("C-c a" . align-regexp)
+  ("C-x w" . whitespace-cleanup))
 
 (use-package vertico
   :init
@@ -51,8 +55,7 @@
 
 (use-package consult
   :bind
-  (("C-c M-x" . consult-mode-command)
-   ("C-x b" . consult-buffer)
+  (("C-x b" . counsel-switch-buffer)
    ("C-s" . consult-line)
    ("C-x p g" . consult-ripgrep)
    ("C-x p f" . consult-find)))
@@ -89,6 +92,9 @@
 
 ;; (use-package lsp-bridge
 ;;   :config
-;;   (global-lsp-bridge-mode))
+;;   ;; Force lsp-bridge to respect monorepo projects
+;;   (setq lsp-bridge-get-project-path-by-filepath
+;; 	(lambda (filepath) (project-root (project-current))))
+;;   (global-lsp-bridge-mode)
 
 (provide 'core)
