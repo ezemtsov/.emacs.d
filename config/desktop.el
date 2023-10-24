@@ -27,12 +27,12 @@
 
 (defun monitor-external-disable ()
   (interactive)
-  (shell-command "xrandr --output eDP-1 --primary --auto --output DP-1-1-2 --off")
+  (shell-command "xrandr --output eDP-1 --primary --auto --output DP-1-1-2 --off --output DP-1-1-8 --off")
   (message "Disable external monitor"))
 
 (defun monitor-external-enable ()
   (interactive)
-  (shell-command "xrandr --output eDP-1 --off --output DP-1-1-2 --auto --primary")
+  (shell-command "xrandr --output eDP-1 --auto --output DP-1-1-8 --auto --primary")
   (message "Enable external monitor"))
 
 ;; (defun pulseaudio-ctl (cmd)
@@ -98,11 +98,11 @@
   ;; asked to jump to it again, set the target back to the previous
   ;; one.
   (when (and (eq exwm-workspace-current-index (cdr *exwm-workspace-from-to*))
-             (eq target-idx exwm-workspace-current-index))
+	     (eq target-idx exwm-workspace-current-index))
     (setq target-idx (car *exwm-workspace-from-to*)))
 
   (setq *exwm-workspace-from-to*
-        (cons exwm-workspace-current-index target-idx))
+	(cons exwm-workspace-current-index target-idx))
 
   (exwm-workspace-switch-create target-idx))
 
@@ -111,13 +111,13 @@
   "Jump to a workspace on which the target buffer is displayed."
   (interactive)
   (let ((exwm-layout-show-all-buffers nil)
-        (initial exwm-workspace-current-index))
+	(initial exwm-workspace-current-index))
     (call-interactively #'exwm-workspace-switch-to-buffer)
     ;; After jumping, update the back-and-forth list like on a direct
     ;; index jump.
     (when (not (eq initial exwm-workspace-current-index))
       (setq *exwm-workspace-from-to*
-            (cons initial exwm-workspace-current-index)))))
+	    (cons initial exwm-workspace-current-index)))))
 
 ;; Buffer names equal to xwindow class name
 (defun exwm-rename-buffer ()
@@ -153,7 +153,7 @@
 (defun toggle-maximize-buffer () "Maximize buffer"
   (interactive)
   (if (= 1 (length (window-list)))
-      (jump-to-register '_) 
+      (jump-to-register '_)
     (progn
       (window-configuration-to-register '_)
       (delete-other-windows))))
@@ -164,72 +164,82 @@
 
 ;; Global EXWM keybindings
 (setq exwm-input-global-keys
-        ;; Utilities
+	;; Utilities
       `((,(kbd "s-r")                     . exwm-reset)
-        (,(kbd "s-w")                     . exwm-workspace-switch)
-        (,(kbd "<print>")                 . screenshot)
-        (,(kbd "s-i")                     . exwm-input-toggle-keyboard)
-        (,(kbd "s-j")                     . exwm-jump-to-buffer)
+	(,(kbd "s-w")                     . exwm-workspace-switch)
+	(,(kbd "<print>")                 . screenshot)
+	(,(kbd "s-i")                     . exwm-input-toggle-keyboard)
+	(,(kbd "s-j")                     . exwm-jump-to-buffer)
 
 	(,(kbd "s-d")                     . counsel-linux-app)
 	(,(kbd "s-e")                     . rotate:even-horizontal)
 	(,(kbd "s-v")                     . rotate:even-vertical)
 	(,(kbd "s-<return>")              . start-alacritty)
-	(,(kbd "s-L")                     . secure-lock)
+	(,(kbd "s-L")                     . screen-lock)
 	(,(kbd "s-f")                     . toggle-maximize-buffer)
-		
-        ;; External monitor
-        (,(kbd "s-m <up>")                . monitor-external-enable)
-        (,(kbd "s-m <down>")              . monitor-external-disable)
-        (,(kbd "s-m S-<up>")              . workspace-move-to-external)
-        (,(kbd "s-m S-<down>")            . workspace-move-to-primary)
 
-        ;; Switch focus
-        (,(kbd "s-<left>")                . windmove-left)
-        (,(kbd "s-<right>")               . windmove-right)
-        (,(kbd "s-<down>")                . windmove-down)
-        (,(kbd "s-<up>")                  . windmove-up)
+	;; External monitor
+	(,(kbd "s-m <up>")                . monitor-external-enable)
+	(,(kbd "s-m <down>")              . monitor-external-disable)
+	(,(kbd "s-m S-<up>")              . workspace-move-to-external)
+	(,(kbd "s-m S-<down>")            . workspace-move-to-primary)
 
-        ;; Move buffers
-        (,(kbd "s-S <up>")                . buf-move-up)
-        (,(kbd "s-S <down>")              . buf-move-down)
-        (,(kbd "s-S <left>")              . buf-move-left)
-        (,(kbd "s-S <right>")             . buf-move-right)
+	;; Switch focus
+	(,(kbd "s-<left>")                . windmove-left)
+	(,(kbd "s-<right>")               . windmove-right)
+	(,(kbd "s-<down>")                . windmove-down)
+	(,(kbd "s-<up>")                  . windmove-up)
 
-        ;; Resize buffers
-        (,(kbd "C-M-<left>")              . shrink-window-horizontally)
-        (,(kbd "C-M-<right>")             . enlarge-window-horizontally)
-        (,(kbd "C-M-<up>")                . shrink-window)
-        (,(kbd "C-M-<down>")              . enlarge-window)
+	;; Move buffers
+	(,(kbd "s-S <up>")                . buf-move-up)
+	(,(kbd "s-S <down>")              . buf-move-down)
+	(,(kbd "s-S <left>")              . buf-move-left)
+	(,(kbd "s-S <right>")             . buf-move-right)
 
-        ;; Media control
-        (,(kbd "<XF86AudioMute>")         . volume-mute)
-        (,(kbd "<XF86AudioRaiseVolume>")  . volume-up)
-        (,(kbd "<XF86AudioLowerVolume>")  . volume-down)
-        (,(kbd "<XF86MonBrightnessDown>") . brightness-down)
-        (,(kbd "<XF86MonBrightnessUp>")   . brightness-up)
-        
-        ;; ;; Switch window by s-o N
-        ,@(mapcar (lambda (i)
-                    `(,(kbd (format "M-%d" i)) .
-                      (lambda ()
-                        (interactive)
-                        (winum-select-window-by-number ,i))))
-                  (number-sequence 0 9))
+	;; Resize buffers
+	(,(kbd "C-M-<left>")              . shrink-window-horizontally)
+	(,(kbd "C-M-<right>")             . enlarge-window-horizontally)
+	(,(kbd "C-M-<up>")                . shrink-window)
+	(,(kbd "C-M-<down>")              . enlarge-window)
 
-        ;; Switch to workspace by s-N (lambda (i)
-        ,@(mapcar (lambda (i)
-                    `(,(kbd (format "s-%d" i)) .
-                      (lambda ()
-                        (interactive)
-                        (exwm-workspace-switch-back-and-forth ,i))))
-                  (number-sequence 1 9))))
+	;; Media control
+	(,(kbd "<XF86AudioMute>")         . volume-mute)
+	(,(kbd "<XF86AudioRaiseVolume>")  . volume-up)
+	(,(kbd "<XF86AudioLowerVolume>")  . volume-down)
+	(,(kbd "<XF86MonBrightnessDown>") . brightness-down)
+	(,(kbd "<XF86MonBrightnessUp>")   . brightness-up)
+
+	;; ;; Switch window by s-o N
+	,@(mapcar (lambda (i)
+		    `(,(kbd (format "M-%d" i)) .
+		      (lambda ()
+			(interactive)
+			(winum-select-window-by-number ,i))))
+		  (number-sequence 0 9))
+
+	;; Switch to workspace by s-N (lambda (i)
+	,@(mapcar (lambda (i)
+		    `(,(kbd (format "s-%d" i)) .
+		      (lambda ()
+			(interactive)
+			(exwm-workspace-switch-back-and-forth ,i))))
+		  (number-sequence 1 9))))
+
+;; Line-editing shortcuts
+(exwm-input-set-simulation-keys
+ '(([?\C-r] . ?\C-r)
+   ([?\C-d] . ?\C-d) ;; cancel python
+   ([?\C-C] . ?\C-c) ;; cancel process   
+   ([?\M-w] . ?\C-c) ;; copy
+   ([?\C-y] . ?\C-v))) ;; paste
+
+;; Let buffers move seamlessly between workspaces by making them
+;; accessible in selectors on all frames.
+(setq exwm-workspace-show-all-buffers t)
+(setq exwm-layout-show-all-buffers t)
 
 ;; Enable EXWM
 (exwm-enable)
 (exwm-randr-enable)
- 
-;; First workspace is the default one
-(exwm-workspace-switch-create 1)
 
 (provide 'desktop)

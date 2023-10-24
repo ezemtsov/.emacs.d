@@ -18,6 +18,8 @@
      (csharp-mode . csharp-ts-mode)
      (json-mode . json-ts-mode)
      (python-mode . python-ts-mode)
+     (json-mode . json-ts-mode)
+     (nix-mode . nix-ts-mode)
      (rust-mode . rust-ts-mode)
      (toml-mode . toml-ts-mode)
      (yaml-mode . yaml-ts-mode))))
@@ -30,7 +32,7 @@
   :ensure t
   :defer t
   :custom
-  (nix-nixfmt-bin "nixpkgs-fmt"))
+  (nix-nixfmt-bin "nixpkgs-GMT"))
 
 (use-package web-mode
   :ensure t
@@ -64,7 +66,8 @@
   :config
   (defun magit-push-to-gerrit ()
     (interactive)
-    (magit-git-command-topdir ("git push origin HEAD:refs/for/master")))
+    (magit-push-refspecs "origin" "HEAD:refs/for/master" nil))
+
   (transient-append-suffix 'magit-push "p"
     '("R" "Push to gerrit" magit-push-to-gerrit)))
 

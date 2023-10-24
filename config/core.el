@@ -9,19 +9,18 @@
   (windmove-default-keybindings) ;; move with arrows
   (delete-selection-mode t) ;; delete on paste
   (electric-pair-mode t) ;; smart parentesis wrapping
-  (defadvice split-window ;; swtich forcus to the new window
-      (after split-window-after activate)
-    (other-window 1))
+
+  ;; Was using this for magit, but it faulty for other modes 
+  ;; (defadvice split-window ;; swtich forcus to the new window
+  ;;     (after split-window-after activate)
+  ;;   (other-window 1))
+  
   (menu-bar-mode 0) ;; remove menus
   (scroll-bar-mode 0) ;; remove scrollbar
   (tool-bar-mode 0) ;; remove toolbars
   (which-key-mode t) ;; show options
   (setq indent-tabs-mode nil) ;; disable tabs
   (setq tab-width 4) ;; 4 spaces always
-
-  ;; a folder with .gitignore is a project
-  ;; this is important for eglot to correctly define workspaces
-  (setq project-vc-extra-root-markers '(".gitignore")) 
   
   :custom
   (use-short-answers t)	;; y or n
@@ -39,7 +38,7 @@
   ("M-TAB" . completion-at-point)
   ("M-/" . completion-at-point)
   ("C-c a" . align-regexp)
-  ("C-x w" . whitespace-cleanup))
+  ("C-c w" . whitespace-cleanup))
 
 (use-package vertico
   :init
@@ -50,15 +49,24 @@
   (savehist-mode))
 
 (use-package project
+  :custom
+  ;; a folder with .gitignore is a project
+  ;; this is important for eglot to correctly define workspaces
+  (project-vc-extra-root-markers '(".gitignore"))
+  (project-switch-use-entire-map t)
+  :bind
+  ("C-x p p" . project-switch-project)
   :bind-keymap
   ("C-c p" . project-prefix-map))
 
 (use-package consult
   :bind
-  (("C-x b" . counsel-switch-buffer)
+  (("C-x b" . consult-buffer)
+   ;; (("C-x b" . counsel-switch-buffer)
    ("C-s" . consult-line)
-   ("C-x p g" . consult-ripgrep)
-   ("C-x p f" . consult-find)))
+   ("C-c p g" . consult-ripgrep)
+   ("C-c p f" . consult-find)))
+
 
 (use-package orderless
   :custom
@@ -75,9 +83,7 @@
 (use-package corfu
   :init
   (corfu-popupinfo-mode t)
-  (global-corfu-mode)
-  :custom
-  (corfu-auto t))
+  (global-corfu-mode))
 
 ;; File dabbrev & path extensions
 (use-package cape
