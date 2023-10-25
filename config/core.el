@@ -64,9 +64,8 @@
   (("C-x b" . consult-buffer)
    ;; (("C-x b" . counsel-switch-buffer)
    ("C-s" . consult-line)
-   ("C-c p g" . consult-ripgrep)
-   ("C-c p f" . consult-find)))
-
+   ("C-x p g" . consult-ripgrep)
+   ("C-x p f" . consult-find)))
 
 (use-package orderless
   :custom
