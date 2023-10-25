@@ -21,9 +21,10 @@
   (interactive)
   (start-process "xsecurelock" nil "xsecurelock"))
 
-(defun start-alacritty ()
+;; Start new shell with a name of current folder
+(defun start-shell ()
   (interactive)
-  (start-process "alacritty" nil "alacritty"))
+  (vterm (concat "shell " default-directory)))
 
 (defun monitor-external-disable ()
   (interactive)
@@ -175,7 +176,7 @@
 	(,(kbd "s-d")                     . counsel-linux-app)
 	(,(kbd "s-e")                     . rotate:even-horizontal)
 	(,(kbd "s-v")                     . rotate:even-vertical)
-	(,(kbd "s-<return>")              . start-alacritty)
+	(,(kbd "s-<return>")              . start-shell)
 	(,(kbd "s-L")                     . screen-lock)
 	(,(kbd "s-f")                     . toggle-maximize-buffer)
 
