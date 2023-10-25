@@ -128,9 +128,6 @@
 	(when (equal exwm-class-name "Chromium-browser")
 	  (exwm-workspace-rename-buffer exwm-title))))
 
-;; Hide fringes
-(fringe-mode 0)
-
 ;; Show system tray
 (exwm-systemtray-enable)
 

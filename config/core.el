@@ -9,19 +9,17 @@
   (windmove-default-keybindings) ;; move with arrows
   (delete-selection-mode t) ;; delete on paste
   (electric-pair-mode t) ;; smart parentesis wrapping
-
-  ;; Was using this for magit, but it faulty for other modes 
-  ;; (defadvice split-window ;; swtich forcus to the new window
-  ;;     (after split-window-after activate)
-  ;;   (other-window 1))
-  
+  ;; focus on new windows
+  (defun split-window-below-focus () (interactive) (split-window-below) (other-window 1))
+  (defun split-window-right-focus () (interactive) (split-window-right) (other-window 1))
   (menu-bar-mode 0) ;; remove menus
   (scroll-bar-mode 0) ;; remove scrollbar
   (tool-bar-mode 0) ;; remove toolbars
   (which-key-mode t) ;; show options
   (setq indent-tabs-mode nil) ;; disable tabs
   (setq tab-width 4) ;; 4 spaces always
-  
+  (fringe-mode 0) ;; remove borders
+
   :custom
   (use-short-answers t)	;; y or n
   (inhibit-startup-message t) ;; disable startup screen
@@ -33,6 +31,8 @@
    'magit-display-buffer-same-window-except-diff-v1)
 
   :bind
+  ("C-x 2" . split-window-below-focus)
+  ("C-x 3" . split-window-right-focus)
   ("C-=" . text-scale-increase)
   ("C--" . text-scale-decrease)
   ("M-TAB" . completion-at-point)
