@@ -30,7 +30,7 @@
   (auto-save-file-name-transforms '((".*" "/tmp/" t))) ;; keep trash away from source
   (backup-directory-alist '((".*" . "/tmp/"))) ;; keep trash away from source
   (magit-display-buffer-function ;; show magit in the same buffer
-   'magit-display-buffer-fullcolumn-most-v1)
+   'magit-display-buffer-same-window-except-diff-v1)
 
   :bind
   ("C-=" . text-scale-increase)
