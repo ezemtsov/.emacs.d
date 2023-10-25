@@ -120,10 +120,11 @@
 	    (cons initial exwm-workspace-current-index)))))
 
 ;; Set static name for most of the x classes
-(setq exwm-update-class-hook (exwm-workspace-rename-buffer exwm-class-name))
+(add-hook 'exwm-update-class-hook
+	  (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
 
 ;; Expect for browser, it should be named over it's tab
-(setq exwm-update-title-hook
+(add-hook 'exwm-update-title-hook
       (lambda ()
 	(when (equal exwm-class-name "Chromium-browser")
 	  (exwm-workspace-rename-buffer exwm-title))))
