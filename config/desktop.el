@@ -211,14 +211,6 @@
 	(,(kbd "<XF86MonBrightnessDown>") . brightness-down)
 	(,(kbd "<XF86MonBrightnessUp>")   . brightness-up)
 
-	;; ;; Switch window by s-o N
-	,@(mapcar (lambda (i)
-		    `(,(kbd (format "M-%d" i)) .
-		      (lambda ()
-			(interactive)
-			(winum-select-window-by-number ,i))))
-		  (number-sequence 0 9))
-
 	;; Switch to workspace by s-N (lambda (i)
 	,@(mapcar (lambda (i)
 		    `(,(kbd (format "s-%d" i)) .
