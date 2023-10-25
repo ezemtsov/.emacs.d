@@ -119,11 +119,14 @@
       (setq *exwm-workspace-from-to*
 	    (cons initial exwm-workspace-current-index)))))
 
-;; Buffer names equal to xwindow class name
-(defun exwm-rename-buffer ()
-  (interactive)
-  (exwm-workspace-rename-buffer exwm-class-name))
-(add-hook 'exwm-update-class-hook 'exwm-rename-buffer)
+;; Set static name for most of the x classes
+(setq exwm-update-class-hook (exwm-workspace-rename-buffer exwm-class-name))
+
+;; Expect for browser, it should be named over it's tab
+(setq exwm-update-title-hook
+      (lambda ()
+	(when (equal exwm-class-name "Chromium-browser")
+	  (exwm-workspace-rename-buffer exwm-title))))
 
 ;; Hide fringes
 (fringe-mode 0)
@@ -229,7 +232,7 @@
 (exwm-input-set-simulation-keys
  '(([?\C-r] . ?\C-r)
    ([?\C-d] . ?\C-d) ;; cancel python
-   ([?\C-C] . ?\C-c) ;; cancel process   
+   ([?\C-C] . ?\C-c) ;; cancel process
    ([?\M-w] . ?\C-c) ;; copy
    ([?\C-y] . ?\C-v))) ;; paste
 
