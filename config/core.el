@@ -29,6 +29,7 @@
   (backup-directory-alist '((".*" . "/tmp/"))) ;; keep trash away from source
   (magit-display-buffer-function ;; show magit in the same buffer
    'magit-display-buffer-same-window-except-diff-v1)
+  (goto-address-mode t) ;; make HTTP links clickable
 
   :bind
   ("C-x 2" . split-window-below-focus)
