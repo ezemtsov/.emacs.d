@@ -1,5 +1,8 @@
 (require 'package)
 
+;; Start server
+(server-start)
+
 ;; Initialize nix packages
 (package-initialize)
 
