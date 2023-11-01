@@ -26,19 +26,18 @@
   (interactive)
   (vterm (concat "shell " default-directory)))
 
-(defun monitor-external-disable ()
-  (interactive)
-  (shell-command "xrandr --output eDP-1 --primary --auto --output DP-1-1-2 --off --output DP-1-1-8 --off")
-  (message "Disable external monitor"))
+(defun xrandr-list ()
+  (split-string (shell-command-to-string "xrandr --listmonitors | awk '{print $4}'") "\n" t))
 
-(defun monitor-external-enable ()
+(defun xrandr (&optional monitor)
   (interactive)
-  (shell-command "xrandr --output eDP-1 --auto --output DP-1-1-8 --auto --primary")
-  (message "Enable external monitor"))
+  (let ((chosen-monitor (if monitor monitor (completing-read "Choose a monitor: " (xrandr-list)))))
+    (shell-command (format "xrandr --output %s --primary --auto" chosen-monitor))))
 
-;; (defun pulseaudio-ctl (cmd)
-;;   (shell-command (concat "pulseaudio-ctl " cmd))
-;;   (message "Volume command: %s" cmd))
+(defun monitor-external-enable (monitor)
+  (interactive "Choose monitor to enable")
+  (shell-command (format "xrandr --output %s --primary --auto" monitor))
+  (message (format "Trying to enable %s" monitor)))
 
 (defun volume-mute ()
   (interactive) (shell-command "pactl set-sink-mute \"alsa_output.pci-0000_00_1f.3.analog-stereo\" toggle")
@@ -61,28 +60,6 @@
 ;;   (interactive)
 ;;   (shell-command "exec light -U 10")
 ;;   (message "Brightness decreased"))
-
-;; ;; Monitor functions
-;; (setq monitor-current (alist-get 'name (frame-monitor-attributes)))
-;; (setq monitor-list (mapcar
-;;                     (lambda (arg) (alist-get 'name arg))
-;;                     (display-monitor-attributes-list)))
-;; (setq monitor-primary "eDP-1")
-;; (setq monitor-external "DP-1-1-8")
-
-;; (defun workspace-move (display)
-;;   (plist-put exwm-randr-workspace-output-plist
-;;              exwm-workspace-current-index
-;;              display)
-;;   (exwm-randr--refresh))
-
-;; (defun workspace-move-to-primary ()
-;;   (interactive)
-;;   (workspace-move monitor-primary))
-
-;; (defun workspace-move-to-external ()
-;;   (interactive)
-;;   (workspace-move monitor-external))
 
 ;; ;;-----------------------------------------------------------
 ;; ;; EXWM Configuration
@@ -127,7 +104,7 @@
 ;; Expect for browser, it should be named over it's tab
 (add-hook 'exwm-update-title-hook
       (lambda ()
-	(when (equal exwm-class-name "Chromium-browser")
+	(when (member exwm-class-name '("Chromium-browser" "firefox"))
 	  (exwm-workspace-rename-buffer exwm-title))))
 
 ;; Show system tray
@@ -162,7 +139,8 @@
 
 (use-package emacs
   :config
-  (add-to-list 'mode-line-misc-info exwm-workspace-mode-line-format t))
+  (add-to-list 'mode-line-misc-info exwm-workspace-mode-line-format t)
+  (xrandr "DP-3")) ;; Prefer HDMI monitor
 
 ;; Global EXWM keybindings
 (setq exwm-input-global-keys
