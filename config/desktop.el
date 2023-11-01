@@ -150,7 +150,8 @@
 	(,(kbd "<print>")                 . screenshot)
 	(,(kbd "s-i")                     . exwm-input-toggle-keyboard)
 	(,(kbd "s-j")                     . exwm-jump-to-buffer)
-
+	(,(kbd "C-x b")                   . consult-buffer)
+	
 	(,(kbd "s-d")                     . counsel-linux-app)
 	(,(kbd "s-e")                     . rotate:even-horizontal)
 	(,(kbd "s-v")                     . rotate:even-vertical)
