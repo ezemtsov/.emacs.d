@@ -19,7 +19,7 @@
      (json-mode . json-ts-mode)
      (python-mode . python-ts-mode)
      (json-mode . json-ts-mode)
-     (nix-mode . nix-ts-mode)
+     (nix-mode . nix-mode)
      (rust-mode . rust-ts-mode)
      (toml-mode . toml-ts-mode)
      (yaml-mode . yaml-ts-mode))))
@@ -47,6 +47,8 @@
   ;; (highlight-indent-guides-mode t)
   (add-to-list 'auto-mode-alist '("\\.fsproj\\'" . nxml-mode))
   (add-to-list 'auto-mode-alist '("\\.csproj\\'" . nxml-mode))
+  ;; :custom
+  ;; (eglot-type-hint-face ((t (:inherit nil))))
   :hook
   (fsharp-mode . eglot-ensure))
 
