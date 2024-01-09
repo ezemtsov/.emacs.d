@@ -1,6 +1,6 @@
 (use-package emacs
   :config
-  ;; (add-hook 'before-save-hook 'whitespace-cleanup) ;; breaks jinja mode for some reason
+  (add-hook 'before-save-hook 'whitespace-cleanup) ;; breaks jinja mode for some reason
   (add-hook 'prog-mode-hook 'hl-line-mode)
   (add-hook 'prog-mode-hook 'flyspell-prog-mode)
   (add-hook 'prog-mode-hook 'display-line-numbers-mode)
