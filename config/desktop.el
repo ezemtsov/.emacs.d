@@ -82,6 +82,7 @@
 (display-battery-mode)
 (setq display-time-format "%a %H:%M")
 (display-time-mode 1)
+(add-to-list 'global-mode-string (list " " '(:eval (get-free-disk-space default-directory))) t)
 
 (defun toggle-maximize-buffer () "Maximize buffer"
   (interactive)
