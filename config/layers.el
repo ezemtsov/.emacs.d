@@ -32,7 +32,8 @@
   :ensure t
   :defer t
   :custom
-  (nix-nixfmt-bin "nixpkgs-GMT"))
+  (nix-nixfmt-bin "nixpkgs-fmt"))
+
 
 (use-package web-mode
   :ensure t
