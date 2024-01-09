@@ -34,6 +34,15 @@
   :custom
   (nix-nixfmt-bin "nixpkgs-fmt"))
 
+;; Add support for pushing to gerrit
+(use-package magit
+  :config
+  (defun magit-push-to-gerrit ()
+    (interactive)
+    (magit-push-refspecs "origin" "HEAD:refs/for/master" nil))
+
+  (transient-append-suffix 'magit-push "p"
+    '("R" "Push to gerrit" magit-push-to-gerrit)))
 
 (use-package web-mode
   :ensure t
@@ -64,14 +73,5 @@
   (python-ts-mode . eglot-ensure)
   (python-mode . eglot-ensure))
 
-;; Add support for pushing to gerrit
-(use-package magit
-  :config
-  (defun magit-push-to-gerrit ()
-    (interactive)
-    (magit-push-refspecs "origin" "HEAD:refs/for/master" nil))
-
-  (transient-append-suffix 'magit-push "p"
-    '("R" "Push to gerrit" magit-push-to-gerrit)))
 
 (provide 'layers)
