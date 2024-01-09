@@ -73,5 +73,10 @@
   (python-ts-mode . eglot-ensure)
   (python-mode . eglot-ensure))
 
+(use-package typescript-ts-mode
+  :defer t
+  :ensure t
+  :hook
+  (typescript-ts-mode . eglot-ensure))
 
 (provide 'layers)
