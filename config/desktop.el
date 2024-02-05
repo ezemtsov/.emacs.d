@@ -63,13 +63,13 @@
 
 ;; Set static name for most of the x classes
 (add-hook 'exwm-update-class-hook
-	  (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
+          (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
 
 ;; Expect for browser, it should be named over it's tab
 (add-hook 'exwm-update-title-hook
       (lambda ()
-	(when (member exwm-class-name '("Chromium-browser" "firefox"))
-	  (exwm-workspace-rename-buffer exwm-title))))
+        (when (member exwm-class-name '("Chromium-browser" "firefox"))
+          (exwm-workspace-rename-buffer exwm-title))))
 
 ;; Show system tray
 (exwm-systemtray-enable)
@@ -98,17 +98,16 @@
 the back&forth behaviour of i3."
   (interactive)
   (let* ((key (event-basic-type last-command-event))
-	 (tab (if (and (characterp key) (>= key ?1) (<= key ?9))
-		  (- key ?0)
-		0))
-	 (current (1+ (tab-bar--current-tab-index))))
+         (tab (if (and (characterp key) (>= key ?1) (<= key ?9))
+                  (- key ?0)
+                0))
+         (current (1+ (tab-bar--current-tab-index))))
     (if (eq tab current)
-	(tab-recent)
+        (tab-recent)
       (tab-bar-select-tab tab))))
 
 (use-package emacs
   :config
-  (xrandr "DP-3") ;; Prefer HDMI monitor
   (setq tab-bar-tab-name-function 'tab-bar-tab-name-truncated)
   (setq tab-bar-separator "")
   (setq tab-bar-close-button-show nil) ;; Hide annoying close buttom
@@ -124,50 +123,52 @@ the back&forth behaviour of i3."
 ;; emacs restart. Found here: https://oremacs.com/2015/01/17/setting-up-ediff
 (defmacro csetq (variable value)
   `(funcall (or (get ',variable 'custom-set)
-		'set-default)
-	    ',variable ,value))
+                'set-default)
+            ',variable ,value))
 
-;; Note that having shortcuts in global keys is important to be able
-;; to reach shortcuts in some of the apps that take over keyboard
-;; shortcuts, for example Telegram Desktop
+;; Note that using global keys is important to be able to reach
+;; shortcuts for some X-based apps that take over keyboard, for
+;; example Telegram Desktop.
 (csetq exwm-input-global-keys
        `(
-	 ;; Core actions
-	 (, (kbd "s-d") . counsel-linux-app)
-	 (, (kbd "s-e") . rotate:even-horizontal)
-	 (, (kbd "s-v") . rotate:even-vertical)
-	 (, (kbd "s-f") . toggle-maximize-buffer)
+         ;; Core actions
+         (, (kbd "s-d") . counsel-linux-app)
+         (, (kbd "s-e") . rotate:even-horizontal)
+         (, (kbd "s-v") . rotate:even-vertical)
+         (, (kbd "s-f") . toggle-maximize-buffer)
 
-	 ;; Start programs
-	 (, (kbd "s-L") . screen-lock)
-	 (, (kbd "s-<return>") . start-shell)
+         ;; Start programs
+         (, (kbd "s-L") . screen-lock)
+         (, (kbd "s-<return>") . start-shell)
 
-	 ;; Move focus
-	 (, (kbd "s-<left>") . windmove-left)
-	 (, (kbd "s-<right>") . windmove-right)
-	 (, (kbd "s-<down>") . windmove-down)
-	 (, (kbd "s-<up>") . windmove-up)
+         ;; Move focus
+         (, (kbd "s-<left>") . windmove-left)
+         (, (kbd "s-<right>") . windmove-right)
+         (, (kbd "s-<down>") . windmove-down)
+         (, (kbd "s-<up>") . windmove-up)
 
-	 ;; Tab shortcuts
-	 (,(kbd "s-w") . tab-close)
-	 (,(kbd "s-t") . tab-new)
-	 (,(kbd "s-<tab>") . tab-next)
-	 (,(kbd "s-<iso-lefttab>") . tab-previous)
+         ;; Tab shortcuts
+         (,(kbd "s-w") . tab-close)
+         (,(kbd "s-t") . tab-new)
+         (,(kbd "s-<tab>") . tab-next)
+         (,(kbd "s-<iso-lefttab>") . tab-previous)
 
-	 ;; Switch to tab by s-N
-	 ,@(mapcar (lambda (i)
-		     `(,(kbd (format "s-%d" i)) .
-		       tab-bar-select-or-return))
-		   (number-sequence 1 9))
+         ;; Switch to tab by s-N
+         ,@(mapcar (lambda (i)
+                     `(,(kbd (format "s-%d" i)) .
+                       tab-bar-select-or-return))
+                   (number-sequence 1 9))
 
-	 ;; Resize buffers
-	 (, (kbd "C-M-<left>") . shrink-window-horizontally)
-	 (, (kbd "C-M-<right>") . enlarge-window-horizontally)
-	 (, (kbd "C-M-<up>") . shrink-window)
-	 (, (kbd "C-M-<down>") . enlarge-window)
+         ;; Resize buffers
+         (, (kbd "C-M-<left>") . shrink-window-horizontally)
+         (, (kbd "C-M-<right>") . enlarge-window-horizontally)
+         (, (kbd "C-M-<up>") . shrink-window)
+         (, (kbd "C-M-<down>") . enlarge-window)
 
-	 ;; Some linux apps are too hungry for keyboard focus
-	 (, (kbd "C-x b") . consult-buffer)))
+         (, (kbd "s-o") . exwm-workspace-switch)
+
+         ;; Some linux apps are too hungry for keyboard focus
+         (, (kbd "C-x b") . consult-buffer)))
 
 ;; Line-editing shortcuts
 (exwm-input-set-simulation-keys
