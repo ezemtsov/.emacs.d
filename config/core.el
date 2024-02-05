@@ -18,6 +18,7 @@
   (which-key-mode t) ;; show options
   (setq-default indent-tabs-mode nil) ;; disable tabs
   (setq tab-width 4) ;; 4 spaces always
+  (setq js-indent-level 4)
   (fringe-mode 0) ;; remove borders
 
   (defun delete-word (arg)
