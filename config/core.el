@@ -49,16 +49,13 @@
   :init
   (savehist-mode))
 
-(use-package project
+(use-package projectile
+  :config
+  (projectile-global-mode)
   :custom
-  ;; a folder with .gitignore is a project
-  ;; this is important for eglot to correctly define workspaces
-  (project-vc-extra-root-markers '(".gitignore"))
-  (project-switch-use-entire-map t)
-  :bind
-  ("C-x p p" . project-switch-project)
+  (projectile-dirconfig-file ".gitignore")
   :bind-keymap
-  ("C-c p" . project-prefix-map))
+  ("C-c p" . projectile-command-map))
 
 (use-package consult
   :bind
