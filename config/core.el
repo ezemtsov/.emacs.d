@@ -21,6 +21,7 @@
   (setq js-indent-level 4)
   (fringe-mode 0) ;; remove borders
   (envrc-global-mode t) ;; enable direnv support globally
+  (setq ring-bell-function 'ignore)
 
   (defun delete-word (arg)
     "Delete characters forward until encountering the end of a word.
