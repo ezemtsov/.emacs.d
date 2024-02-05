@@ -110,5 +110,7 @@ With argument, do this that many times."
   :custom
   (vterm-shell "fish"))
 
+;; Pull request viewer for magit
+(use-package forge)
 
 (provide 'core)
