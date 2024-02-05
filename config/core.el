@@ -106,11 +106,5 @@ With argument, do this that many times."
   :custom
   (vterm-shell "fish"))
 
-;; (use-package lsp-bridge
-;;   :config
-;;   ;; Force lsp-bridge to respect monorepo projects
-;;   (setq lsp-bridge-get-project-path-by-filepath
-;; 	(lambda (filepath) (project-root (project-current))))
-;;   (global-lsp-bridge-mode)
 
 (provide 'core)
