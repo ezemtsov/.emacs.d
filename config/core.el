@@ -16,7 +16,7 @@
   (scroll-bar-mode 0) ;; remove scrollbar
   (tool-bar-mode 0) ;; remove toolbars
   (which-key-mode t) ;; show options
-  (setq indent-tabs-mode nil) ;; disable tabs
+  (setq-default indent-tabs-mode nil) ;; disable tabs
   (setq tab-width 4) ;; 4 spaces always
   (fringe-mode 0) ;; remove borders
 
