@@ -20,6 +20,18 @@
   (setq tab-width 4) ;; 4 spaces always
   (fringe-mode 0) ;; remove borders
 
+  (defun delete-word (arg)
+    "Delete characters forward until encountering the end of a word.
+With argument, do this that many times."
+    (interactive "p")
+    (delete-region (point) (progn (forward-word arg) (point))))
+
+  (defun backward-delete-word (arg)
+    "Delete characters backward until encountering the end of a word.
+With argument, do this that many times."
+    (interactive "p")
+    (delete-word (- arg)))
+
   :custom
   (use-short-answers t)	;; y or n
   (inhibit-startup-message t) ;; disable startup screen
@@ -39,7 +51,8 @@
   ("M-TAB" . completion-at-point)
   ("M-/" . completion-at-point)
   ("C-c a" . align-regexp)
-  ("C-c w" . whitespace-cleanup))
+  ("C-c w" . whitespace-cleanup)
+  ("C-<backspace>" . backward-delete-word))
 
 (use-package vertico
   :init
