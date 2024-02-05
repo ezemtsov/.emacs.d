@@ -22,6 +22,7 @@
   (fringe-mode 0) ;; remove borders
   (envrc-global-mode t) ;; enable direnv support globally
   (setq ring-bell-function 'ignore)
+  (global-goto-address-mode) ;; enable URLs as hyperlinks. Navigate with C-c RET
 
   (defun delete-word (arg)
     "Delete characters forward until encountering the end of a word.
