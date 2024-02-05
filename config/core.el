@@ -20,6 +20,7 @@
   (setq tab-width 4) ;; 4 spaces always
   (setq js-indent-level 4)
   (fringe-mode 0) ;; remove borders
+  (envrc-global-mode t) ;; enable direnv support globally
 
   (defun delete-word (arg)
     "Delete characters forward until encountering the end of a word.
