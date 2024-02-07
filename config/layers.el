@@ -39,7 +39,10 @@
   :config
   (defun magit-push-to-gerrit ()
     (interactive)
-    (magit-push-refspecs "origin" "HEAD:refs/for/master" nil))
+    (message (if (magit-commit-at-point) (magit-commit-at-point) "HEAD"))
+    (let ((refspec (if (magit-commit-at-point) (magit-commit-at-point) "HEAD")))
+      (message refspec)
+      (magit-push-refspecs "origin" (format "%s:refs/for/master" refspec) nil)))
 
   (transient-append-suffix 'magit-push "p"
     '("R" "Push to gerrit" magit-push-to-gerrit)))
