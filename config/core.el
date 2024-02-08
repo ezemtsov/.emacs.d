@@ -69,17 +69,21 @@ With argument, do this that many times."
   :config
   (projectile-global-mode)
   :custom
+  (projectile-globally-ignored-directories '(".git"))
   (projectile-dirconfig-file ".gitignore")
   :bind-keymap
-  ("C-c p" . projectile-command-map))
+  ("C-c p" . projectile-command-map)
+  :bind
+  (:map projectile-command-map
+        ("SPC" . projectile-find-file)
+        ("s" . consult-ripgrep)))
 
 (use-package consult
+  :custom
+  (consult-project-function (lambda (_) (projectile-project-root)))
   :bind
   (("C-x b" . consult-buffer)
-   ;; (("C-x b" . counsel-switch-buffer)
-   ("C-s" . consult-line)
-   ("C-x p g" . consult-ripgrep)
-   ("C-x p f" . consult-find)))
+   ("C-s" . consult-line)))
 
 (use-package orderless
   :custom
