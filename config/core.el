@@ -80,10 +80,14 @@ With argument, do this that many times."
 
 (use-package consult
   :custom
-  (consult-project-function (lambda (_) (projectile-project-root)))
+  (consult-project-function
+   (lambda (_)
+     (if (projectile-project-root)
+         (projectile-project-root) "/" )))
   :bind
-  (("C-x b" . consult-buffer)
-   ("C-s" . consult-line)))
+  ("C-x b" . consult-buffer)
+  ;;("C-x b" . counsel-switch-buffer)
+  ("C-s" . consult-line))
 
 (use-package orderless
   :custom
