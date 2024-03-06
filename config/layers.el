@@ -47,9 +47,27 @@
   (transient-append-suffix 'magit-push "p"
     '("R" "Push to gerrit" magit-push-to-gerrit)))
 
+(use-package tide
+  :defer t
+  :ensure t)
+
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-mode +1)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1))
+
 (use-package web-mode
   :ensure t
-  :defer t)
+  :defer t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
+  (add-hook 'web-mode-hook
+            (lambda ()
+              (when (string-equal "tsx" (file-name-extension buffer-file-name))
+                (setup-tide-mode)))))
 
 (use-package fsharp-mode
   :defer t
@@ -79,7 +97,9 @@
 (use-package typescript-ts-mode
   :defer t
   :ensure t
+  :custom
+  (typescript-ts-mode-indent-offset 4)
   :hook
-  (typescript-ts-mode . eglot-ensure))
+  (typescript-ts-mode . setup-tide-mode))
 
 (provide 'layers)
