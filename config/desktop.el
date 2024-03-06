@@ -171,16 +171,15 @@ the back&forth behaviour of i3."
          (, (kbd "C-x b") . consult-buffer)))
 
 ;; Line-editing shortcuts
-(exwm-input-set-simulation-keys
+(setq exwm-input-set-simulation-keys
  '(([?\C-r] . ?\C-r)
    ([?\C-d] . ?\C-d) ;; cancel python
    ([?\C-C] . ?\C-c) ;; cancel process
    ([?\M-w] . ?\C-c) ;; copy
    ([?\C-y] . ?\C-v))) ;; paste
 
-;; Let buffers move seamlessly between workspaces by making them
-;; accessible in selectors on all frames.
-(setq exwm-workspace-show-all-buffers t)
+(setq exwm-systemtray-height 18)
+(setq exwm-workspace-show-all-buffers nil)
 (setq exwm-layout-show-all-buffers t)
 
 ;; Enable EXWM
