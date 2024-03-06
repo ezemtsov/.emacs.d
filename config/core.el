@@ -10,8 +10,20 @@
   (delete-selection-mode t) ;; delete on paste
   (electric-pair-mode t) ;; smart parentesis wrapping
   ;; focus on new windows
-  (defun split-window-below-focus () (interactive) (split-window-below) (other-window 1))
-  (defun split-window-right-focus () (interactive) (split-window-right) (other-window 1))
+
+  (defun split-window-below-focus ()
+    (interactive)
+    (split-window-below)
+    (redisplay) ; https://github.com/emacs-exwm/exwm/issues/22
+    (windmove-down))
+
+  (defun split-window-right-focus ()
+    "Split the window horizontally and focus the new window."
+    (interactive)
+    (split-window-right)
+    (redisplay) ; https://github.com/emacs-exwm/exwm/issues/22
+    (windmove-right))
+
   (menu-bar-mode 0) ;; remove menus
   (scroll-bar-mode 0) ;; remove scrollbar
   (tool-bar-mode 0) ;; remove toolbars
