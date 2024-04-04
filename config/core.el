@@ -94,12 +94,11 @@ With argument, do this that many times."
   :custom
   (consult-project-function
    (lambda (_)
-     (if (projectile-project-root)
+     (if (boundp 'projectile-project-root)
          (projectile-project-root) "/" )))
   :bind
-  ("C-x b" . consult-buffer)
-  ;;("C-x b" . counsel-switch-buffer)
-  ("C-s" . consult-line))
+  ("C-s" . consult-line)
+  ("C-x b" . consult-buffer))
 
 (use-package orderless
   :custom
