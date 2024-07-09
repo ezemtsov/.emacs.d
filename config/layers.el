@@ -75,13 +75,14 @@
   :init
   (require 'eglot-fsharp)
   :config
-  ;; (highlight-indent-guides-mode t)
   (add-to-list 'auto-mode-alist '("\\.fsproj\\'" . nxml-mode))
   (add-to-list 'auto-mode-alist '("\\.csproj\\'" . nxml-mode))
   ;; :custom
   ;; (eglot-type-hint-face ((t (:inherit nil))))
   :hook
-  (fsharp-mode . eglot-ensure))
+  (fsharp-mode . (lambda ()
+                   (highlight-indentation-mode)
+                   (eglot-ensure))))
 
 (use-package python-mode
   :defer t
