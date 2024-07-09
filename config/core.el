@@ -67,7 +67,8 @@ With argument, do this that many times."
   ("M-/" . completion-at-point)
   ("C-c a" . align-regexp)
   ("C-c w" . whitespace-cleanup)
-  ("C-<backspace>" . backward-delete-word))
+  ("M-<backspace>" . backward-delete-word)
+  ("C-x k" . kill-this-buffer))
 
 (use-package vertico
   :init
