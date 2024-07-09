@@ -102,4 +102,34 @@
   :hook
   (typescript-ts-mode . setup-tide-mode))
 
+(use-package rust-mode
+  :defer t
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
+  (add-hook 'before-save-hook eglot-format-buffer)
+  :hook
+  (rust-mode . eglot-ensure)
+  (rust-ts-mode . eglot-ensure))
+
+(use-package json-mode
+  :defer t
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.json\\'" . json-ts-mode))
+  :hook
+  (json-ts-mode . eglot-ensure))
+
+(use-package sl
+  :defer t
+  :ensure t
+  :hook
+  (json-ts-mode . eglot-ensure))
+
+(use-package go-mode
+  :ensure t
+  :mode "\\.go\\'"
+  :hook
+  (go-ts-mode . eglot-ensure))
+
 (provide 'layers)
