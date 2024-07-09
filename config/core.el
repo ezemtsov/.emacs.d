@@ -133,6 +133,7 @@ With argument, do this that many times."
 ;; Use fish for vterm
 (use-package vterm
   :custom
+  (vterm-buffer-name-string "shell %s")
   (vterm-shell "fish"))
 
 ;; Pull request viewer for magit
