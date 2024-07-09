@@ -119,13 +119,14 @@ With argument, do this that many times."
 
 ;; Enable auto-completion
 (use-package corfu
-  :init
+  :config
+  (setq corfu-auto t)
   (corfu-popupinfo-mode t)
-  (global-corfu-mode))
+  (global-corfu-mode t))
 
 ;; File dabbrev & path extensions
 (use-package cape
-  :init
+  :config
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file))
 
