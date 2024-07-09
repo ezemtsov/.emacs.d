@@ -139,4 +139,10 @@ With argument, do this that many times."
 ;; Pull request viewer for magit
 (use-package forge)
 
+(use-package multiple-cursors
+  :bind
+  ("C->" . 'mc/mark-next-like-this)
+  ("C-<" . 'mc/mark-previous-like-this))
+
+
 (provide 'core)
