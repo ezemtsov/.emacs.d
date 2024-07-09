@@ -100,6 +100,11 @@ With argument, do this that many times."
   ("C-s" . consult-line)
   ("C-x b" . consult-buffer))
 
+(use-package marginalia
+  :ensure
+  :init
+  (marginalia-mode))
+
 (use-package orderless
   :custom
   (completion-styles '(orderless basic)))
