@@ -6,6 +6,7 @@
 (require 'exwm-xim)
 (require 'exwm-layout)
 
+(require 'transient)
 (require 'consult)
 
 ;; Appropriated from tazjin's little functions file
@@ -34,14 +35,28 @@
                                :prompt "Choose a command: ")))
     (start-process choice nil choice)))
 
-(defun xkb-switch ()
+
+(defun xkb-switch-list ()
+  "A list of available keyboard layouts"
+  (split-string (shell-command-to-string "xkb-switch --list")))
+
+(defun xkb-switch (layout)
   "A layout switcher based on consult"
   (interactive)
-  (let* ((layout-list (split-string (shell-command-to-string "xkb-switch --list")))
-         (choice (consult--read layout-list
-                                :sort nil
-                                :prompt "Choose a layout: ")))
-    (shell-command (format "xkb-switch -s %s" choice))))
+  (shell-command (format "xkb-switch -s %s" layout))
+  (message (format "Layout switched to %s" layout)))
+
+(transient-define-prefix keyoard-switcher ()
+  "Toggle busy."
+  ["Layouts"
+   ("1" "English (en)" (xkb-switch "us"))
+   ("2" "Russian (ru)" (xkb-switch "ru"))
+   ("3" "Norwegian (no)" (xkb-switch "no"))])
+
+(defun start-shell ()
+  "Start new shell with a name of current folder"
+  (interactive)
+  (vterm (concat "shell " default-directory)))
 
 (defun xrandr-list ()
   "xrandr query to get a list of monitors"
@@ -180,7 +195,7 @@ the back&forth behaviour of i3."
          (, (kbd "s-<down>") . windmove-down)
          (, (kbd "s-<up>") . windmove-up)
 
-         (, (kbd "s-<SPC>") . xkb-switch)
+         (, (kbd "s-<SPC>") . keyoard-switcher)
 
          ;; Tab shortcuts
          (,(kbd "s-w") . tab-close)
