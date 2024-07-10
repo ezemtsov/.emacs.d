@@ -47,11 +47,11 @@
   (message (format "Layout switched to %s" layout)))
 
 (transient-define-prefix keyoard-switcher ()
-  "Toggle busy."
+  "A transient-based keyboard switcher"
   ["Layouts"
-   ("1" "English (en)" (xkb-switch "us"))
-   ("2" "Russian (ru)" (xkb-switch "ru"))
-   ("3" "Norwegian (no)" (xkb-switch "no"))])
+   ("1" "English (en)" (lambda () (interactive) (xkb-switch "us")))
+   ("2" "Russian (ru)" (lambda () (interactive) (xkb-switch "ru")))
+   ("3" "Norwegian (no)" (lambda () (interactive) (xkb-switch "ru")))])
 
 (defun start-shell ()
   "Start new shell with a name of current folder"
