@@ -55,7 +55,7 @@
   ["Layouts"
    ("1" "English (en)" (lambda () (interactive) (xkb-switch "us")))
    ("2" "Russian (ru)" (lambda () (interactive) (xkb-switch "ru")))
-   ("3" "Norwegian (no)" (lambda () (interactive) (xkb-switch "ru")))])
+   ("3" "Norwegian (no)" (lambda () (interactive) (xkb-switch "no")))])
 
 (defun start-shell ()
   "Start new shell with a name of current folder"
