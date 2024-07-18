@@ -199,6 +199,12 @@ the back&forth behaviour of i3."
          (, (kbd "s-<down>") . windmove-down)
          (, (kbd "s-<up>") . windmove-up)
 
+         ;; Move buffers
+         (, (kbd "S-s-<left>") . buf-move-left)
+         (, (kbd "S-s-<right>") . buf-move-right)
+         (, (kbd "S-s-<up>") . buf-move-up)
+         (, (kbd "S-s-<down>") . buf-move-down)
+
          (, (kbd "s-<SPC>") . keyoard-switcher)
 
          ;; Tab shortcuts
