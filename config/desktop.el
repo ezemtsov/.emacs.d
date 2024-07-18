@@ -9,6 +9,10 @@
 (require 'transient)
 (require 'consult)
 
+(defun screen-lock ()
+  (interactive)
+  (start-process "xsecurelock" nil "xsecurelock"))
+
 ;; Appropriated from tazjin's little functions file
 ;; https://cs.tvl.fyi/depot/-/blob/users/tazjin/emacs/config/functions.el
 (defun executable-list ()
