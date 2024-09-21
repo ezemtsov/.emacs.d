@@ -1,6 +1,5 @@
 ;; EXWM
 (require 'exwm)
-(require 'exwm-config)
 (require 'exwm-randr)
 (require 'exwm-systemtray)
 (require 'exwm-xim)
@@ -12,6 +11,10 @@
 (defun screen-lock ()
   (interactive)
   (start-process "xsecurelock" nil "xsecurelock"))
+
+(defun screenshot ()
+  (interactive)
+  (split-string (shell-command-to-string "flameshot gui")))
 
 ;; Appropriated from tazjin's little functions file
 ;; https://cs.tvl.fyi/depot/-/blob/users/tazjin/emacs/config/functions.el
