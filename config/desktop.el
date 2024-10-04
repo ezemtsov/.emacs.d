@@ -214,8 +214,10 @@ the back&forth behaviour of i3."
          ;; Tab shortcuts
          (,(kbd "s-w") . tab-close)
          (,(kbd "s-t") . tab-new)
-         (,(kbd "s-<tab>") . tab-next)
-         (,(kbd "s-<iso-lefttab>") . tab-previous)
+         (, (kbd "s-<tab> <right>") . tab-next)
+         (, (kbd "s-<tab> <left>") . tab-previous)
+         (, (kbd "s-<tab> <down>") . tab-bar-history-back)
+         (, (kbd "s-<tab> <up>") . tab-bar-history-forward)
 
          (,(kbd "s-<prior>") . exwm-workspace-prior)
          (,(kbd "s-<next>") . exwm-workspace-next)
