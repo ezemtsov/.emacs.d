@@ -108,9 +108,9 @@
 (defun toggle-maximize-buffer () "Maximize buffer"
   (interactive)
   (if (= 1 (length (window-list)))
-      (jump-to-register '_)
+      (jump-to-register (tab-bar--current-tab-index))
     (progn
-      (window-configuration-to-register '_)
+      (window-configuration-to-register (tab-bar--current-tab-index))
       (delete-other-windows))))
 
 (defun tab-bar-select-or-return ()
@@ -138,6 +138,7 @@ the back&forth behaviour of i3."
   (setq tab-bar-close-button-show nil) ;; Hide annoying close buttom
   (setq tab-bar-format '(tab-bar-format-tabs tab-bar-format-align-right tab-bar-format-global))
   (tab-bar-mode 1)
+  (tab-bar-history-mode t)
   :custom
   (tab-bar-new-tab-choice
    (lambda () (get-buffer-create "*scratch*")))
