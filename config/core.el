@@ -110,13 +110,6 @@ With argument, do this that many times."
   :custom
   (completion-styles '(orderless basic)))
 
-(use-package undo-tree
-  :init
-  (undo-tree-mode t)
-  :custom
-  (undo-tree-history-directory-alist
-   '(("." . "~/.emacs.d/.undo-tree"))))
-
 ;; Enable auto-completion
 (use-package corfu
   :config
@@ -129,6 +122,13 @@ With argument, do this that many times."
   :config
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file))
+
+(use-package undo-tree
+  :custom
+  (undo-tree-history-directory-alist
+   '(("." . "~/.emacs.d/.undo-tree")))
+  :init
+  (global-undo-tree-mode))
 
 ;; Use fish for vterm
 (use-package vterm
