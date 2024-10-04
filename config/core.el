@@ -79,7 +79,7 @@ With argument, do this that many times."
   (savehist-mode))
 
 (use-package projectile
-  :config
+  :init
   (projectile-global-mode)
   :custom
   (projectile-globally-ignored-directories '(".git"))
@@ -113,8 +113,9 @@ With argument, do this that many times."
 (use-package corfu
   :config
   (setq corfu-auto t)
-  (corfu-popupinfo-mode t)
-  (global-corfu-mode t))
+  (setq corfu-popupinfo-mode t)
+  :init
+  (global-corfu-mode))
 
 ;; File dabbrev & path extensions
 (use-package cape
