@@ -102,7 +102,6 @@ With argument, do this that many times."
   ("C-x b" . consult-buffer))
 
 (use-package marginalia
-  :ensure
   :init
   (marginalia-mode))
 
