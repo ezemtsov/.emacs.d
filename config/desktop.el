@@ -207,10 +207,7 @@ the back&forth behaviour of i3."
          (, (kbd "C-M-<up>") . shrink-window)
          (, (kbd "C-M-<down>") . enlarge-window)
 
-         (, (kbd "s-o") . exwm-workspace-switch)
-
-         ;; Some linux apps are too hungry for keyboard focus
-         (, (kbd "C-x b") . consult-buffer)))
+         (, (kbd "s-o") . exwm-workspace-switch))
 
 ;; Line-editing shortcuts
 (exwm-input-set-simulation-key (kbd "C-r") (kbd "C-r")) ;; refresh page
