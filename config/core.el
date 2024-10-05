@@ -86,6 +86,7 @@ With argument, do this that many times."
   :init
   (projectile-global-mode)
   :custom
+  (projectile-switch-project-action 'projectile-dired)
   (projectile-globally-ignored-directories '(".git"))
   (projectile-dirconfig-file ".gitignore")
   :bind-keymap
