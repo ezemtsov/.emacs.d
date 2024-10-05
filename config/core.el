@@ -2,7 +2,7 @@
 (use-package emacs
   :init
   (load-theme 'sanityinc-tomorrow-night) ;; dark is nice for eyes
-  (telephone-line-mode t) ;; make mode line simpler
+  (doom-modeline-mode nil) ;; make mode line simpler
   (set-frame-font "JetBrains Mono 10" nil t)
   (recentf-mode t) ;; remember previous files
   (blink-cursor-mode 0) ;; stop blinking
