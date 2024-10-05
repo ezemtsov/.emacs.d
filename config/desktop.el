@@ -215,7 +215,6 @@ the back&forth behaviour of i3."
 ;; Line-editing shortcuts
 (exwm-input-set-simulation-key (kbd "C-r") (kbd "C-r")) ;; refresh page
 (exwm-input-set-simulation-key (kbd "C-d") (kbd "C-d")) ;; cancel process
-;; (exwm-input-set-simulation-key (kbd "C-c C-c") (kbd "C-c")) ;; cancel process
 
 (exwm-input-set-simulation-key (kbd "M-w") (kbd "C-c")) ;; copy text
 (exwm-input-set-simulation-key (kbd "C-y") (kbd "C-v")) ;; copy text
