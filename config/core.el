@@ -121,10 +121,7 @@ With argument, do this that many times."
      (if (boundp 'projectile-project-root)
          (projectile-project-root) "/" )))
   (consult-buffer-sources
-   '((:name "Current"
-      :category buffer
-      :items (lambda () (list (buffer-name))))
-     (:name "Tabs"
+   '((:name "Tabs"
       :category tab
       :items (lambda () (mapcar #'(lambda (tab) (alist-get 'name tab)) (tab-bar-tabs)))
       :action (lambda (cand) (tab-switch cand)))
