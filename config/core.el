@@ -12,6 +12,8 @@
   ;; focus on new windows
 
   (winner-mode t) ;; be able to undo window change
+  (auto-save-mode t)
+
   (defun split-window-below-focus ()
     (interactive)
     (split-window-below)
