@@ -11,6 +11,7 @@
   (electric-pair-mode t) ;; smart parentesis wrapping
   ;; focus on new windows
 
+  (winner-mode t) ;; be able to undo window change
   (defun split-window-below-focus ()
     (interactive)
     (split-window-below)
