@@ -35,7 +35,7 @@
   (setq tab-width 4) ;; 4 spaces always
   (setq js-indent-level 4)
   (fringe-mode 0) ;; remove borders
-  (envrc-global-mode t) ;; enable direnv support globally
+  (envrc-global-mode 0) ;; enable direnv support globally
   (setq ring-bell-function 'ignore)
   (global-goto-address-mode) ;; enable URLs as hyperlinks. Navigate with C-c RET
 
