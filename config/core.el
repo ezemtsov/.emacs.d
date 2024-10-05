@@ -71,7 +71,8 @@ With argument, do this that many times."
   ("C-c a" . align-regexp)
   ("C-c w" . whitespace-cleanup)
   ("M-<backspace>" . backward-delete-word)
-  ("C-x k" . kill-this-buffer))
+  ("C-x k" . kill-this-buffer)
+  ("M-!" . async-shell-command))
 
 (use-package vertico
   :init
