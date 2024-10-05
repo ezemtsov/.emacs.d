@@ -16,33 +16,6 @@
   (interactive)
   (split-string (shell-command-to-string "flameshot gui")))
 
-;; Appropriated from tazjin's little functions file
-;; https://cs.tvl.fyi/depot/-/blob/users/tazjin/emacs/config/functions.el
-(defun executable-list ()
-  "Creates a list of all external commands available on $PATH
-  while filtering NixOS wrappers."
-  (cl-loop
-   for dir in (split-string (getenv "PATH") path-separator)
-   when (and (file-exists-p dir) (file-accessible-directory-p dir))
-   for lsdir = (cl-loop for i in (directory-files dir t)
-                        for bn = (file-name-nondirectory i)
-                        when (and (not (s-contains? "-wrapped" i))
-                                  (not (member bn completions))
-                                  (not (file-directory-p i))
-                                  (file-executable-p i))
-                        collect bn)
-   append lsdir into completions
-   finally return (sort completions 'string-lessp)))
-
-(defun execute-command ()
-  "A super-lightweight replacement for counsel-linux-app"
-  (interactive)
-  (let ((choice (consult--read (executable-list)
-                               :category 'file
-                               :prompt "Choose a command: ")))
-    (start-process choice nil choice)))
-
-
 (defun xkb-switch-list ()
   "A list of available keyboard layouts"
   (split-string (shell-command-to-string "xkb-switch --list")))
@@ -133,7 +106,7 @@ the back&forth behaviour of i3."
 
 (use-package tab-bar
   :config
-  (setq tab-bar-tab-name-function 'tab-bar-tab-name-current-with-count)
+  (setq tab-bar-tab-name-function 'tab-bar-tab-name-all)
   (setq tab-bar-separator "")
   (setq tab-bar-close-button-show nil) ;; Hide annoying close buttom
   (setq tab-bar-format '(tab-bar-format-tabs tab-bar-format-align-right tab-bar-format-global))
@@ -187,7 +160,7 @@ the back&forth behaviour of i3."
 (csetq exwm-input-global-keys
        `(
          ;; Core actions
-         (, (kbd "s-d") . execute-command)
+         (, (kbd "s-d") . consult-buffer)
          (, (kbd "s-e") . rotate:even-horizontal)
          (, (kbd "s-v") . rotate:even-vertical)
          (, (kbd "s-f") . toggle-maximize-buffer)

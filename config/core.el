@@ -92,11 +92,45 @@ With argument, do this that many times."
         ("s" . consult-ripgrep)))
 
 (use-package consult
+  :config
+  ;; Appropriated from tazjin's little functions fiel
+  ;; https://cs.tvl.fyi/depot/-/blob/users/tazjin/emacs/config/functions.el
+  (defun executable-list ()
+    "Creates a list of all external commands available on $PATH
+     while filtering NixOS wrappers."
+    (cl-loop
+     for dir in (split-string (getenv "PATH") path-separator)
+     when (and (file-exists-p dir) (file-accessible-directory-p dir))
+     for lsdir = (cl-loop for i in (directory-files dir t)
+                          for bn = (file-name-nondirectory i)
+                          when (and (not (s-contains? "-wrapped" i))
+                                    (not (member bn completions))
+                                    (not (file-directory-p i))
+                                    (file-executable-p i))
+                          collect bn)
+     append lsdir into completions
+     finally return (sort completions 'string-lessp)))
   :custom
   (consult-project-function
    (lambda (_)
      (if (boundp 'projectile-project-root)
          (projectile-project-root) "/" )))
+  (consult-buffer-sources
+   '((:name "Current"
+      :category buffer
+      :items (lambda () (list (buffer-name))))
+     (:name "Tabs"
+      :category tab
+      :items (lambda () (mapcar #'(lambda (tab) (alist-get 'name tab)) (tab-bar-tabs)))
+      :action (lambda (cand) (tab-switch cand)))
+     consult--source-hidden-buffer
+     consult--source-modified-buffer
+     consult--source-buffer
+     consult--source-recent-file
+     (:name "Apps"
+      :category app
+      :items executable-list
+      :action (lambda (cand) (start-process cand nil cand)))))
   :bind
   ("C-s" . consult-line)
   ("C-x b" . consult-buffer))
@@ -146,6 +180,7 @@ With argument, do this that many times."
 
 (use-package vertico-posframe
   :config
+  (setq vertico-posframe-width 200)
   (vertico-posframe-mode t))
 
 (provide 'core)
