@@ -1,18 +1,20 @@
 ;; Global configuration
 (use-package emacs
   :init
-  (load-theme 'sanityinc-tomorrow-night) ;; dark is nice for eyes
-  (doom-modeline-mode nil) ;; make mode line simpler
-  (set-frame-font "JetBrains Mono 10" nil t)
+  (load-theme 'catppuccin :no-confirm)
+  ;; (load-theme 'sanityinc-tomorrow-night t) ;; dark is nice for eyes
+  (set-frame-font "JetBrainsMono 10" nil t)
   (recentf-mode t) ;; remember previous files
   (blink-cursor-mode 0) ;; stop blinking
   (windmove-default-keybindings) ;; move with arrows
   (delete-selection-mode t) ;; delete on paste
   (electric-pair-mode t) ;; smart parentesis wrapping
-  ;; focus on new windows
 
   (winner-mode t) ;; be able to undo window change
-  (auto-save-mode t)
+  (auto-save-mode nil)
+
+  ;; Jump to window
+  (winum-mode)
 
   (defun split-window-below-focus ()
     (interactive)
@@ -35,6 +37,7 @@
   (setq tab-width 4) ;; 4 spaces always
   (setq js-indent-level 4)
   (fringe-mode 0) ;; remove borders
+  (defun clean () (interactive) (mapc 'kill-buffer (buffer-list))) ;; kill all buffers
   (envrc-global-mode 0) ;; enable direnv support globally
   (setq ring-bell-function 'ignore)
   (global-goto-address-mode) ;; enable URLs as hyperlinks. Navigate with C-c RET
@@ -71,7 +74,7 @@ With argument, do this that many times."
   ("C-c a" . align-regexp)
   ("C-c w" . whitespace-cleanup)
   ("M-<backspace>" . backward-delete-word)
-  ("C-x k" . kill-this-buffer)
+  ("C-x k" . kill-current-buffer)
   ("M-!" . async-shell-command))
 
 (use-package vertico
@@ -93,12 +96,12 @@ With argument, do this that many times."
   ("C-c p" . projectile-command-map)
   :bind
   (:map projectile-command-map
-        ("SPC" . projectile-find-file)
-        ("s" . consult-ripgrep)))
+    ("SPC" . projectile-find-file)
+    ("s" . consult-ripgrep)))
 
 (use-package consult
   :config
-  ;; Appropriated from tazjin's little functions fiel
+  ;; Appropriated from tazjin's little functions file
   ;; https://cs.tvl.fyi/depot/-/blob/users/tazjin/emacs/config/functions.el
   (defun executable-list ()
     "Creates a list of all external commands available on $PATH
@@ -107,22 +110,22 @@ With argument, do this that many times."
      for dir in (split-string (getenv "PATH") path-separator)
      when (and (file-exists-p dir) (file-accessible-directory-p dir))
      for lsdir = (cl-loop for i in (directory-files dir t)
-                          for bn = (file-name-nondirectory i)
-                          when (and (not (s-contains? "-wrapped" i))
-                                    (not (member bn completions))
-                                    (not (file-directory-p i))
-                                    (file-executable-p i))
-                          collect bn)
+              for bn = (file-name-nondirectory i)
+              when (and (not (cl-search "-wrapped" i))
+                    (not (member bn completions))
+                    (not (file-directory-p i))
+                    (file-executable-p i))
+              collect bn)
      append lsdir into completions
      finally return (sort completions 'string-lessp)))
   :custom
   (consult-project-function
    (lambda (_)
      (if (boundp 'projectile-project-root)
-         (projectile-project-root) "/" )))
+     (projectile-project-root) "/" )))
   (consult-buffer-sources
    '((:name "Tabs"
-      :category tab
+      :category 'tab
       :items (lambda () (mapcar #'(lambda (tab) (alist-get 'name tab)) (tab-bar-tabs)))
       :action (lambda (cand) (tab-switch cand)))
      consult--source-hidden-buffer
@@ -182,7 +185,7 @@ With argument, do this that many times."
 
 (use-package vertico-posframe
   :config
-  (setq vertico-posframe-width 200)
+  (setq vertico-posframe-width 150)
   (vertico-posframe-mode t))
 
 (provide 'core)

@@ -9,24 +9,23 @@
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
   ;; enable jump to definition even when lsp is not enabled
-  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
-  :custom
-  ;; Use tree-sitter modes for various languages.
-  (major-mode-remap-alist
-   '((bash-mode . bash-ts-mode)
-     (csharp-mode . csharp-ts-mode)
-     (json-mode . json-ts-mode)
-     (python-mode . python-ts-mode)
-     (json-mode . json-ts-mode)
-     (nix-mode . nix-mode)
-     (rust-mode . rust-ts-mode)
-     (toml-mode . toml-ts-mode)
-     (yaml-mode . yaml-ts-mode))))
+(use-package flycheck
+  :ensure t
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode))
 
 (use-package eglot
   :custom
-  (eglot-autoshutdown t)) ;; shutdown eglot servers after buffer is closed
+  ;; shutdown eglot servers after buffer is closed
+  (eglot-autoshutdown t))
+
+;; (use-package eglot-booster
+;;   :vc (:url "https://github.com/jdtsmith/eglot-booster"
+;;        :branch "main")
+;;   :after eglot
+;;   :config (eglot-booster-mode))
 
 (use-package nix-mode
   :ensure t
@@ -59,15 +58,15 @@
   (eldoc-mode +1)
   (tide-hl-identifier-mode +1))
 
-(use-package web-mode
-  :ensure t
-  :defer t
-  :config
-  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
-  (add-hook 'web-mode-hook
-            (lambda ()
-              (when (string-equal "tsx" (file-name-extension buffer-file-name))
-                (setup-tide-mode)))))
+;; (use-package web-mode
+;;   :ensure t
+;;   :defer t
+;;   :config
+;;   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
+;;   (add-hook 'web-mode-hook
+;;             (lambda ()
+;;               (when (string-equal "tsx" (file-name-extension buffer-file-name))
+;;                 (setup-tide-mode)))))
 
 (use-package fsharp-mode
   :defer t
@@ -92,45 +91,52 @@
   (setenv "PYTHONENCODING" "utf-8")
   (setq python-indent-offset 4)
   :hook
-  (python-ts-mode . eglot-ensure)
   (python-mode . eglot-ensure))
 
-(use-package typescript-ts-mode
+(use-package typescript-mode
   :defer t
   :ensure t
   :custom
-  (typescript-ts-mode-indent-offset 4)
+  (typescript-mode-indent-offset 4)
   :hook
-  (typescript-ts-mode . setup-tide-mode))
+  (typescript-mode . setup-tide-mode))
 
 (use-package rust-mode
   :defer t
   :ensure t
   :config
-  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
   (add-hook 'before-save-hook eglot-format-buffer)
   :hook
-  (rust-mode . eglot-ensure)
-  (rust-ts-mode . eglot-ensure))
+  (rust-mode . eglot-ensure))
 
 (use-package json-mode
   :defer t
   :ensure t
   :config
-  (add-to-list 'auto-mode-alist '("\\.json\\'" . json-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
   :hook
-  (json-ts-mode . eglot-ensure))
+  (json-mode . eglot-ensure))
 
 (use-package sl
   :defer t
   :ensure t
   :hook
-  (json-ts-mode . eglot-ensure))
+  (json-mode . eglot-ensure))
 
 (use-package go-mode
   :ensure t
   :mode "\\.go\\'"
   :hook
-  (go-ts-mode . eglot-ensure))
+  (go-mode . eglot-ensure))
+
+(use-package org-babel
+  :no-require
+  :config
+  (org-babel-do-load-languages
+   'org-babel-load-languages '((python . t)))
+  (setq org-confirm-babel-evaluate nil)
+  (add-hook 'org-babel-after-execute-hook
+            'org-redisplay-inline-images))
 
 (provide 'layers)

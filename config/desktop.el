@@ -1,4 +1,5 @@
-;; EXWM
+;;; desktop.el - my EXWM functions
+
 (require 'exwm)
 (require 'exwm-randr)
 (require 'exwm-systemtray)
@@ -100,9 +101,9 @@ the back&forth behaviour of i3."
         (tab-recent)
       (tab-bar-select-tab tab))))
 
-;; ;;-----------------------------------------------------------
-;; ;; EXWM Configuration
-;; ;;-----------------------------------------------------------
+;;-----------------------------------------------------------
+;; EXWM Configuration
+;;-----------------------------------------------------------
 
 (use-package tab-bar
   :config
@@ -126,10 +127,6 @@ the back&forth behaviour of i3."
   :config
   (exwm-modeline-mode))
 
-;; Set static name for most of the x classes
-(add-hook 'exwm-update-class-hook
-          (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
-
 ;; Expect for browser, it should be named over it's tab
 (setq exwm-update-title-hook nil)
 (add-hook 'exwm-update-title-hook
@@ -140,12 +137,6 @@ the back&forth behaviour of i3."
                (exwm-workspace-rename-buffer (format " %s" exwm-title)))
               ((member exwm-class-name '("Slack"))
                (exwm-workspace-rename-buffer (format " %s" exwm-title))))))
-
-;; Show system tray
-(exwm-systemtray-enable)
-
-;; (setq exwm-floating-setup-hook nil)
-;; (add-hook 'exwm-floating-setup-hook #'exwm-layout-show-mode-line)
 
 ;; This is a nice macro that allows remap global exwm keys without
 ;; emacs restart. Found here: https://oremacs.com/2015/01/17/setting-up-ediff
@@ -185,15 +176,15 @@ the back&forth behaviour of i3."
          (, (kbd "s-<SPC>") . keyoard-switcher)
 
          ;; Tab shortcuts
-         (,(kbd "s-w") . tab-close)
-         (,(kbd "s-t") . tab-new)
+         (, (kbd "s-w") . tab-close)
+         (, (kbd "s-t") . tab-new)
          (, (kbd "s-<tab> <right>") . tab-next)
          (, (kbd "s-<tab> <left>") . tab-previous)
          (, (kbd "s-<tab> <down>") . tab-bar-history-back)
          (, (kbd "s-<tab> <up>") . tab-bar-history-forward)
 
-         (,(kbd "s-<prior>") . exwm-workspace-prior)
-         (,(kbd "s-<next>") . exwm-workspace-next)
+         (, (kbd "s-<prior>") . exwm-workspace-prior)
+         (, (kbd "s-<next>") . exwm-workspace-next)
 
          ;; Switch to tab by s-N
          ,@(mapcar (lambda (i)
@@ -207,7 +198,17 @@ the back&forth behaviour of i3."
          (, (kbd "C-M-<up>") . shrink-window)
          (, (kbd "C-M-<down>") . enlarge-window)
 
-         (, (kbd "s-o") . exwm-workspace-switch))
+         (, (kbd "s-o") . exwm-workspace-switch)))
+
+;; Show system tray
+(exwm-systemtray-mode)
+
+(setq exwm-floating-setup-hook nil)
+(add-hook 'exwm-floating-setup-hook #'exwm-layout-show-mode-line)
+
+;; Set static name for most of the x classes
+(add-hook 'exwm-update-class-hook
+          (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
 
 ;; Line-editing shortcuts
 (exwm-input-set-simulation-key (kbd "C-r") (kbd "C-r")) ;; refresh page
@@ -215,12 +216,13 @@ the back&forth behaviour of i3."
 
 (exwm-input-set-simulation-key (kbd "M-w") (kbd "C-c")) ;; copy text
 (exwm-input-set-simulation-key (kbd "C-y") (kbd "C-v")) ;; copy text
+(exwm-input-set-simulation-key (kbd "C-w") (kbd "C-x")) ;; cut text
 
 (setq exwm-workspace-show-all-buffers nil)
 (setq exwm-layout-show-all-buffers t)
 
 ;; Enable EXWM
 (exwm-enable)
-(exwm-randr-enable)
+(exwm-randr-mode)
 
 (provide 'desktop)
