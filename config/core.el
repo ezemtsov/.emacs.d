@@ -1,9 +1,8 @@
 ;; Global configuration
 (use-package emacs
   :init
-  (load-theme 'catppuccin :no-confirm)
-  ;; (load-theme 'sanityinc-tomorrow-night t) ;; dark is nice for eyes
-  (set-frame-font "JetBrainsMono 10" nil t)
+  (load-theme 'sanityinc-tomorrow-night t) ;; dark is nice for eyes
+  (add-to-list 'default-frame-alist '(font . "JetBrainsMono 10"))
   (recentf-mode t) ;; remember previous files
   (blink-cursor-mode 0) ;; stop blinking
   (windmove-default-keybindings) ;; move with arrows
@@ -15,6 +14,9 @@
 
   ;; Jump to window
   (winum-mode)
+
+  ;; Just kill the vterm buffers, don't ask
+  (setq kill-buffer-query-functions nil)
 
   (defun split-window-below-focus ()
     (interactive)
@@ -35,12 +37,13 @@
   (which-key-mode t) ;; show options
   (setq-default indent-tabs-mode nil) ;; disable tabs
   (setq tab-width 4) ;; 4 spaces always
-  (setq js-indent-level 4)
+  (setq js-indent-level 2)
   (fringe-mode 0) ;; remove borders
   (defun clean () (interactive) (mapc 'kill-buffer (buffer-list))) ;; kill all buffers
   (envrc-global-mode 0) ;; enable direnv support globally
   (setq ring-bell-function 'ignore)
   (global-goto-address-mode) ;; enable URLs as hyperlinks. Navigate with C-c RET
+  (setq mouse-autoselect-window t) ;; select buffer with mouse
 
   (defun delete-word (arg)
     "Delete characters forward until encountering the end of a word.
@@ -75,7 +78,8 @@ With argument, do this that many times."
   ("C-c w" . whitespace-cleanup)
   ("M-<backspace>" . backward-delete-word)
   ("C-x k" . kill-current-buffer)
-  ("M-!" . async-shell-command))
+  ("M-!" . async-shell-command)
+  ("C-q" . kill-buffer-and-its-windows))
 
 (use-package vertico
   :init
@@ -89,7 +93,7 @@ With argument, do this that many times."
   :init
   (projectile-global-mode)
   :custom
-  (projectile-switch-project-action 'projectile-dired)
+  ;; (projectile-switch-project-action 'projectile-dired)
   (projectile-globally-ignored-directories '(".git"))
   (projectile-dirconfig-file ".gitignore")
   :bind-keymap
@@ -110,24 +114,24 @@ With argument, do this that many times."
      for dir in (split-string (getenv "PATH") path-separator)
      when (and (file-exists-p dir) (file-accessible-directory-p dir))
      for lsdir = (cl-loop for i in (directory-files dir t)
-              for bn = (file-name-nondirectory i)
-              when (and (not (cl-search "-wrapped" i))
-                    (not (member bn completions))
-                    (not (file-directory-p i))
-                    (file-executable-p i))
-              collect bn)
+                          for bn = (file-name-nondirectory i)
+                          when (and (not (cl-search "-wrapped" i))
+                                    (not (member bn completions))
+                                    (not (file-directory-p i))
+                                    (file-executable-p i))
+                          collect bn)
      append lsdir into completions
      finally return (sort completions 'string-lessp)))
   :custom
   (consult-project-function
    (lambda (_)
      (if (boundp 'projectile-project-root)
-     (projectile-project-root) "/" )))
+         (projectile-project-root) "/" )))
   (consult-buffer-sources
    '((:name "Tabs"
       :category 'tab
       :items (lambda () (mapcar #'(lambda (tab) (alist-get 'name tab)) (tab-bar-tabs)))
-      :action (lambda (cand) (tab-switch cand)))
+      :action (lambda (cand) (tab-bar-select-tab-by-name cand)))
      consult--source-hidden-buffer
      consult--source-modified-buffer
      consult--source-buffer
@@ -148,13 +152,16 @@ With argument, do this that many times."
   :custom
   (completion-styles '(orderless basic)))
 
-;; Enable auto-completion
 (use-package corfu
   :config
-  (setq corfu-auto t)
+  (setq corfu-auto nil)
+  (setq corfu-auto-delay 0.5)
+  (setq corfu-echo-mode t)
   (setq corfu-popupinfo-mode t)
   :init
-  (global-corfu-mode))
+  (global-corfu-mode)
+  :bind
+  ("M-/" . completion-at-point))
 
 ;; File dabbrev & path extensions
 (use-package cape
@@ -175,17 +182,19 @@ With argument, do this that many times."
   (vterm-buffer-name-string "shell %s")
   (vterm-shell "fish"))
 
-;; Pull request viewer for magit
-(use-package forge)
-
 (use-package multiple-cursors
   :bind
   ("C->" . 'mc/mark-next-like-this)
   ("C-<" . 'mc/mark-previous-like-this))
 
-(use-package vertico-posframe
-  :config
-  (setq vertico-posframe-width 150)
-  (vertico-posframe-mode t))
+;; (use-package vertico-posframe
+;;   :config
+;;   (setq vertico-posframe-width 150)
+;;   (vertico-posframe-mode t))
+
+(use-package jinx
+  :hook (emacs-startup . global-jinx-mode)
+  :bind (("M-$" . jinx-correct)
+         ("C-M-$" . jinx-languages)))
 
 (provide 'core)

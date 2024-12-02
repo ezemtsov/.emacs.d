@@ -79,7 +79,8 @@
   (interactive)
   (exwm-workspace-switch-create (1- exwm-workspace-current-index)))
 
-(defun toggle-maximize-buffer () "Maximize buffer"
+(defun toggle-maximize-buffer ()
+  "Maximize buffer"
   (interactive)
   (if (= 1 (length (window-list)))
       (jump-to-register (tab-bar--current-tab-index))
@@ -117,7 +118,10 @@ the back&forth behaviour of i3."
   (tab-bar-new-tab-choice
    (lambda () (get-buffer-create "*scratch*")))
   (tab-bar-tab-hints 1)
-  (tab-bar-show t))
+  (tab-bar-show t)
+  :bind
+  ("C-s-<left>" . (lambda () (interactive) (tab-bar-move-tab -1)))
+  ("C-s-<right>" . (lambda () (interactive) (tab-bar-move-tab 1))))
 
 (use-package i3bar
   :config
@@ -155,6 +159,7 @@ the back&forth behaviour of i3."
          (, (kbd "s-e") . rotate:even-horizontal)
          (, (kbd "s-v") . rotate:even-vertical)
          (, (kbd "s-f") . toggle-maximize-buffer)
+         (, (kbd "s-Q") . exwm-workspace-delete)
 
          ;; Start programs
          (, (kbd "s-L") . screen-lock)
@@ -215,14 +220,14 @@ the back&forth behaviour of i3."
 (exwm-input-set-simulation-key (kbd "C-d") (kbd "C-d")) ;; cancel process
 
 (exwm-input-set-simulation-key (kbd "M-w") (kbd "C-c")) ;; copy text
-(exwm-input-set-simulation-key (kbd "C-y") (kbd "C-v")) ;; copy text
-(exwm-input-set-simulation-key (kbd "C-w") (kbd "C-x")) ;; cut text
+(exwm-input-set-simulation-key (kbd "C-y") (kbd "C-v")) ;; paste text
+;;(exwm-input-set-simulation-key (kbd "C-w") (kbd "C-x")) ;; cut text
 
 (setq exwm-workspace-show-all-buffers nil)
 (setq exwm-layout-show-all-buffers t)
 
 ;; Enable EXWM
-(exwm-enable)
 (exwm-randr-mode)
+(exwm-enable)
 
 (provide 'desktop)

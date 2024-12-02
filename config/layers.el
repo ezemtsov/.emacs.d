@@ -130,13 +130,8 @@
   :hook
   (go-mode . eglot-ensure))
 
-(use-package org-babel
-  :no-require
+(use-package jupyter
   :config
-  (org-babel-do-load-languages
-   'org-babel-load-languages '((python . t)))
-  (setq org-confirm-babel-evaluate nil)
-  (add-hook 'org-babel-after-execute-hook
-            'org-redisplay-inline-images))
+  (setq jupyter-repl-echo-eval-p t))
 
 (provide 'layers)
