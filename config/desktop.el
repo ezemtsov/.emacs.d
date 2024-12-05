@@ -208,10 +208,11 @@ the back&forth behaviour of i3."
          (, (kbd "C-M-<up>") . shrink-window)
          (, (kbd "C-M-<down>") . enlarge-window)
 
-         (, (kbd "s-o") . exwm-workspace-switch)))
+         (, (kbd "s-o") . exwm-workspace-switch)
+       ))
 
 ;; Show system tray
-(exwm-systemtray-mode)
+(exwm-systemtray-mode t)
 
 (setq exwm-floating-setup-hook nil)
 (add-hook 'exwm-floating-setup-hook #'exwm-layout-show-mode-line)
@@ -226,7 +227,6 @@ the back&forth behaviour of i3."
 
 (exwm-input-set-simulation-key (kbd "M-w") (kbd "C-c")) ;; copy text
 (exwm-input-set-simulation-key (kbd "C-y") (kbd "C-v")) ;; paste text
-;;(exwm-input-set-simulation-key (kbd "C-w") (kbd "C-x")) ;; cut text
 
 (setq exwm-workspace-show-all-buffers nil)
 (setq exwm-layout-show-all-buffers t)
