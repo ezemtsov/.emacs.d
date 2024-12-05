@@ -83,10 +83,15 @@
   "Maximize buffer"
   (interactive)
   (if (= 1 (length (window-list)))
-      (jump-to-register (tab-bar--current-tab-index))
+      (let ((val (get-register (tab-bar--current-tab-index))))
+        (register-val-jump-to val nil)
+        (tab-bar-mode t)
+        (setq mode-line-format (default-value 'mode-line-format)))
     (progn
       (window-configuration-to-register (tab-bar--current-tab-index))
-      (delete-other-windows))))
+      (delete-other-windows)
+      (tab-bar-mode -1)
+      (setq mode-line-format nil))))
 
 (defun tab-bar-select-or-return ()
   "This function behaves like `tab-bar-select-tab', except it calls
