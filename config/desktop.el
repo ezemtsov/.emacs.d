@@ -211,6 +211,10 @@ the back&forth behaviour of i3."
          (, (kbd "s-o") . exwm-workspace-switch)
        ))
 
+;; Force Slack to behave
+;; https://github.com/ch11ng/exwm/issues/574#issuecomment-490814569
+(add-to-list 'exwm-manage-configurations '((equal exwm-class-name "Slack") managed t))
+
 ;; Show system tray
 (exwm-systemtray-mode t)
 
