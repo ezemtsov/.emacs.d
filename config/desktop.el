@@ -93,6 +93,45 @@ the back&forth behaviour of i3."
       (tab-bar-select-tab tab))))
 
 ;;-----------------------------------------------------------
+;; Experimental stuff
+;;-----------------------------------------------------------
+;; Attempt to ensure correct external monitor handling
+
+(defun my/exwm-ensure-workspaces (num-workspaces)
+  "Ensure there are NUM-WORKSPACES created in EXWM"
+  (let ((current-num-workspaces (length exwm-workspace--list)))
+    (when (< current-num-workspaces num-workspaces)
+      (dotimes (_ (- num-workspaces current-num-workspaces))
+        (exwm-workspace-add))
+      (message "Created %d new workspaces" (- num-workspaces current-num-workspaces)))
+    (when (> current-num-workspaces num-workspaces)
+      (dotimes (i (- current-num-workspaces num-workspaces))
+        (exwm-workspace-delete))
+      (message "Deleted %d workspaces" (- current-num-workspaces num-workspaces)))))
+
+(defun my/xrandr-list ()
+  "xrandr query to get a list of monitors"
+  (split-string (shell-command-to-string "xrandr --listmonitors | awk '{print $4}'") "\n" t))
+
+(defun my/exwm-update-workspaces ()
+  "Ensure every connected monitor has a dedicated EXWM workspace"
+  (let* ((monitors (my/xrandr-list))
+         (num-monitors (length monitors)))
+    ;; Ensure enough workspaces exist
+    (my/exwm-ensure-workspaces num-monitors)
+    ;; Clear current RANDR configuration
+    (setq exwm-randr-workspace-monitor-plist nil)
+    (dotimes (i num-monitors)
+      ;; Assign a workspace to each monitor
+      (setq exwm-randr-workspace-monitor-plist
+            (append exwm-randr-workspace-monitor-plist
+                    (list i (nth i monitors)))))
+    (my/exwm-ensure-workspaces num-monitors)
+    (message "Updated workspaces for monitors: %s" monitors)))
+
+(add-hook 'exwm-randr-refresh-hook #'my/exwm-update-workspaces)
+
+;;-----------------------------------------------------------
 ;; EXWM Configuration
 ;;-----------------------------------------------------------
 
@@ -225,8 +264,10 @@ the back&forth behaviour of i3."
 (exwm-input-set-simulation-key (kbd "M-w") (kbd "C-c")) ;; copy text
 (exwm-input-set-simulation-key (kbd "C-y") (kbd "C-v")) ;; paste text
 
+;; Workspace setup
 (setq exwm-workspace-show-all-buffers nil)
 (setq exwm-layout-show-all-buffers t)
+(add-hook 'exwm-randr-screen-change-hook #'exwm-randr-refresh)
 
 ;; Enable EXWM
 (exwm-randr-mode)
