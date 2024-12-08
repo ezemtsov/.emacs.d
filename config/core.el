@@ -187,11 +187,6 @@ With argument, do this that many times."
   ("C->" . 'mc/mark-next-like-this)
   ("C-<" . 'mc/mark-previous-like-this))
 
-;; (use-package vertico-posframe
-;;   :config
-;;   (setq vertico-posframe-width 150)
-;;   (vertico-posframe-mode t))
-
 (use-package jinx
   :hook (emacs-startup . global-jinx-mode)
   :bind (("M-$" . jinx-correct)
