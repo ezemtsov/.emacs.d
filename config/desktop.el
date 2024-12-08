@@ -148,6 +148,16 @@ the back&forth behaviour of i3."
          (, (kbd "s-Q") . exwm-workspace-delete)
 
          ;; Start programs
+         (, (kbd "s-L") . (lambda () (interactive) (start-process "xsecurelock" nil "xsecurelock")))
+         (, (kbd "s-<return>") . (lambda () (interactive) (vterm (concat "shell " default-directory))))
+         (, (kbd "s-<print>") . (lambda () (interactive) (shell-command "exec flameshot gui")))
+
+         ;; System keys
+         (, (kbd "<XF86AudioMute>") . (lambda () (interactive) (shell-command-to-string "amixer set Master toggle")))
+         (, (kbd "<XF86AudioLowerVolume>") . (lambda () (interactive) (shell-command-to-string "amixer set Master 10%-")))
+         (, (kbd "<XF86AudioRaiseVolume>") . (lambda () (interactive) (shell-command-to-string "amixer set Master 10%+")))
+         (, (kbd "<XF86MonBrightnessUp>") . (lambda () (interactive) (shell-command "light -A 10")))
+         (, (kbd "<XF86MonBrightnessDown>") . (lambda () (interactive) (shell-command "light -U 10")))
 
          ;; Move focus
          (, (kbd "s-<left>") . windmove-left)
