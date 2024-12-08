@@ -13,10 +13,6 @@
   (interactive)
   (start-process "xsecurelock" nil "xsecurelock"))
 
-(defun screenshot ()
-  (interactive)
-  (split-string (shell-command-to-string "flameshot gui")))
-
 (defun xkb-switch-list ()
   "A list of available keyboard layouts"
   (split-string (shell-command-to-string "xkb-switch --list")))
@@ -33,11 +29,6 @@
    ("1" "English (en)" (lambda () (interactive) (xkb-switch "us")))
    ("2" "Russian (ru)" (lambda () (interactive) (xkb-switch "ru")))
    ("3" "Norwegian (no)" (lambda () (interactive) (xkb-switch "no")))])
-
-(defun start-shell ()
-  "Start new shell with a name of current folder"
-  (interactive)
-  (vterm (concat "shell " default-directory)))
 
 (defun xrandr-list ()
   "xrandr query to get a list of monitors"
@@ -60,16 +51,6 @@
 (defun volume-down ()
   (interactive) (shell-command "pactl set-sink-volume \"alsa_output.pci-0000_00_1f.3.analog-stereo\" -5%")
   (message "Speakers volume down"))
-
-;; (defun brightness-up ()
-;;   (interactive)
-;;   (shell-command "exec light -A 10")
-;;   (message "Brightness increased"))
-
-;; (defun brightness-down ()
-;;   (interactive)
-;;   (shell-command "exec light -U 10")
-;;   (message "Brightness decreased"))
 
 (defun exwm-workspace-next ()
   (interactive)
@@ -167,9 +148,6 @@ the back&forth behaviour of i3."
          (, (kbd "s-Q") . exwm-workspace-delete)
 
          ;; Start programs
-         (, (kbd "s-L") . screen-lock)
-         (, (kbd "s-<return>") . start-shell)
-         (, (kbd "<print>") . screenshot)
 
          ;; Move focus
          (, (kbd "s-<left>") . windmove-left)
