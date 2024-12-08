@@ -240,8 +240,9 @@ the back&forth behaviour of i3."
          (, (kbd "C-M-<up>") . shrink-window)
          (, (kbd "C-M-<down>") . enlarge-window)
 
+         (, (kbd "s-O") . exwm-workspace-move-window)
          (, (kbd "s-o") . exwm-workspace-switch)
-       ))
+         ))
 
 ;; Force Slack to behave
 ;; https://github.com/ch11ng/exwm/issues/574#issuecomment-490814569
