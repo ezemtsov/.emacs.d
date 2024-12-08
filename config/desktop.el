@@ -60,19 +60,23 @@
   (interactive)
   (exwm-workspace-switch-create (1- exwm-workspace-current-index)))
 
-(defun toggle-maximize-buffer ()
+(defvar fullscreen-buffer--state nil)
+
+(defun fullscreen-buffer--toggle ()
   "Maximize buffer"
   (interactive)
-  (if (= 1 (length (window-list)))
+  (if fullscreen-buffer--state
       (let ((val (get-register (tab-bar--current-tab-index))))
         (register-val-jump-to val nil)
         (tab-bar-mode t)
-        (setq mode-line-format (default-value 'mode-line-format)))
+        (setq mode-line-format (default-value 'mode-line-format))
+        (setq fullscreen-buffer--state nil))
     (progn
       (window-configuration-to-register (tab-bar--current-tab-index))
       (delete-other-windows)
       (tab-bar-mode -1)
-      (setq mode-line-format nil))))
+      (setq mode-line-format nil)
+      (setq fullscreen-buffer--state t))))
 
 (defun tab-bar-select-or-return ()
   "This function behaves like `tab-bar-select-tab', except it calls
@@ -144,7 +148,8 @@ the back&forth behaviour of i3."
          (, (kbd "s-d") . consult-buffer)
          (, (kbd "s-e") . rotate:even-horizontal)
          (, (kbd "s-v") . rotate:even-vertical)
-         (, (kbd "s-f") . toggle-maximize-buffer)
+         (, (kbd "s-f") . fullscreen-buffer--toggle)
+         (, (kbd "s-F") . exwm-layout-toggle-fullscreen)
          (, (kbd "s-Q") . exwm-workspace-delete)
 
          ;; Start programs
