@@ -2,7 +2,6 @@
   :config
   (add-hook 'before-save-hook 'whitespace-cleanup) ;; breaks jinja mode for some reason
   (add-hook 'prog-mode-hook 'hl-line-mode)
-  (add-hook 'prog-mode-hook 'flyspell-prog-mode)
   (add-hook 'prog-mode-hook 'display-line-numbers-mode)
   (add-hook 'prog-mode-hook 'show-paren-mode)
   (add-hook 'prog-mode-hook 'rainbow-mode)
